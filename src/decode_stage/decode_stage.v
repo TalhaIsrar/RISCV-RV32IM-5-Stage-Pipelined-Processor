@@ -8,24 +8,29 @@ module decode_stage(
     output wire [31:0] op2,
     output wire [4:0] rd,
     output wire [11:0] immediate,
-    output wire [6:0] pass_opcode
+    output wire [6:0] pass_opcode,
+    output wire alu_src,
+    output wire [6:0] func7,
+    output wire [2:0] func3
 );
 
     wire [6:0] opcode;
     wire [4:0] rs1, rs2;
-    wire i_type;
-
+    
     assign opcode = instruction[6:0];
     assign rd = instruction[11:7];
     assign rs1 = instruction[19:15];
     assign rs2 = instruction[24:20];
     assign immediate = instruction[31:20]; // We will extend by 0 in next stage to reduce size of pipeline buffer
+    assign func7 = instruction[31:25];
+    assign func3 = instruction[14:12];
+
 
     // Instantiate the controller module
     decode_controller decode_controller_inst (
         .opcode(opcode),
         .ex_opcode(pass_opcode),
-        .ex_i_type(i_type),
+        .ex_alu_src(alu_src),
         .mem_signals(),
         .wb_signals()
     );
