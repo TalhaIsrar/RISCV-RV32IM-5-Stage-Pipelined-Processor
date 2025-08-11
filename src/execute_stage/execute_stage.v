@@ -5,11 +5,11 @@ module decode_stage(
     input [6:0] func7,
     input [2:0] func3,
     input [6:0] opcode,
-    output wire [31:0] result
+    output wire [31:0] result,
+    output wire [31:0] op2_selected
 );
 
     wire [3:0] alu_ctrl;
-    wire [31:0] op2_selected;
 
     wire [31:0] immediate_extended = {{20{immediate[11]}}, immediate}; //  Sign extend the immediate for I Type
     assign op2_selected = ex_alu_src ? immediate_extended : op2;

@@ -11,7 +11,11 @@ module decode_stage(
     output wire [6:0] pass_opcode,
     output wire alu_src,
     output wire [6:0] func7,
-    output wire [2:0] func3
+    output wire [2:0] func3,
+    output wire mem_write,
+    output wire [2:0] mem_load_type,
+    output wire[1:0] mem_store_type,
+    output wire wb_load
 );
 
     wire [6:0] opcode;
@@ -29,10 +33,13 @@ module decode_stage(
     // Instantiate the controller module
     decode_controller decode_controller_inst (
         .opcode(opcode),
+        .func3(func3),
         .ex_opcode(pass_opcode),
         .ex_alu_src(alu_src),
-        .mem_signals(),
-        .wb_signals()
+        .mem_write(mem_write),
+        .mem_load_type(mem_load_type),
+        .mem_store_type(mem_store_type),
+        .wb_load(wb_load)
     );
 
     // Instantiate the register file module
