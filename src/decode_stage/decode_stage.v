@@ -5,17 +5,20 @@ module decode_stage(
     input pc,
 
     output wire [31:0] op1,
-    output wire [31:0] op2
+    output wire [31:0] op2,
+    output wire [4:0] rd,
+    output wire [11:0] immediate
 );
 
     wire [6:0] opcode;
-    wire [4:0] rd, rs1, rs2;
+    wire [4:0] rs1, rs2;
 
 
     assign opcode = instruction[6:0];
     assign rd = instruction[11:7];
     assign rs1 = instruction[19:15];
     assign rs2 = instruction[24:20];
+    assign immediate = instruction[31:20]; // We will extend by 0 in next stage to reduce size of pipeline buffer
 
     // Instantiate the register file module
     register_file register_file_inst (

@@ -1,0 +1,2 @@
+// OPCODES
+`define OPCODE_RTYPE 7'b0110011
