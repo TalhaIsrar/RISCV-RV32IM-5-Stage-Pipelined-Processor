@@ -6,20 +6,22 @@ module mem_stage(
     input mem_write
     input [1:0] store_type,
     input [2:0] load_type,
-    output wire [31:0] read_data
+    output wire [31:0] read_data,
+    output wire [31:0] calculated_result
 );
-
 
     // Instantiate the Data Memory
     data_mem data_mem_inst (
         .clk(clk),
         .rst(rst),
-        .mem_write()
-        .store_type(),
-        .load_type(),
+        .mem_write(mem_write)
+        .store_type(store_type),
+        .load_type(load_type),
         .addr(result[11:0]),
         .write_data(op2_data),
         .read_data(read_data)
     );   
+
+    assign calculated_result = result;
 
 endmodule

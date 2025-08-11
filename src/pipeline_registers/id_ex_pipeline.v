@@ -1,4 +1,4 @@
-module if_id_pipeline(
+module id_ex_pipeline(
     input clk,
     input rst,
     input [31:0] id_pc,
