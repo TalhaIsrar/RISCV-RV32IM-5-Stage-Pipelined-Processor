@@ -6,7 +6,8 @@ module decode_controller (
     output mem_write,
     output reg [2:0] mem_load_type,
     output reg [1:0] mem_store_type,
-    output wb_load
+    output wb_load,
+    output wb_reg_file
 );
 
     assign ex_opcode = opcode;
@@ -17,6 +18,13 @@ module decode_controller (
     assign mem_write = (opcode == OPCODE_STYPE);
     assign wb_load = (opcode == OPCODE_ILOAD);
     
+    assign wb_reg_file  = (opcode == OPCODE_RTYPE ||
+                         opcode == OPCODE_UTYPE ||
+                         opcode == OPCODE_ITYPE ||
+                         opcode == OPCODE_ILOAD ||
+                         opcode == OPCODE_IJALR ||
+                         opcode == OPCODE_JTYPE);
+
     always @(*) begin
         mem_store_type = 2'b11; // Disable writing
         if (mem_write) begin
