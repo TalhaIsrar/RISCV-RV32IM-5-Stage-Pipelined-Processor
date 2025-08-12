@@ -3,13 +3,13 @@
 module alu(
     input [31:0] op1,
     input [31:0] op2,
-    input [3:0] alu_ctrl,
+    input [3:0] ALUControl,
 
     output reg [31:0] result
 );
 
     always @(*) begin
-        case (alu_ctrl)
+        case (ALUControl)
             `ALU_ADD:  result = op1 + op2;
             `ALU_SUB:  result = op1 - op2;
             `ALU_AND:  result = op1 & op2;

@@ -8,7 +8,8 @@ module data_mem(
     input [31:0]  write_data,
     output reg [31:0]  read_data
 );
-    reg [7:0] mem [0:4095];  // 4KB memory
+    //reg [7:0] mem [0:4095];  // 4KB memory 
+    reg [7:0] mem [0:31]; // USE SMALL SIZE FOR DEBUGGING
 
     wire [11:0] word_addr   = addr[11:2];
     wire [1:0] byte_offset = addr[1:0];

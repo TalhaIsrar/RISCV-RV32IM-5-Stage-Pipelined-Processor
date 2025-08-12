@@ -4,6 +4,7 @@ module decode_controller (
     input [6:0] opcode,
     input [2:0] func3,
     output ex_alu_src,
+    output s_type,
     output mem_write,
     output reg [2:0] mem_load_type,
     output reg [1:0] mem_store_type,
@@ -13,6 +14,7 @@ module decode_controller (
 
     assign ex_alu_src  = (opcode == `OPCODE_ITYPE ||
                          opcode == `OPCODE_ILOAD ||
+                         opcode == `OPCODE_STYPE ||
                          opcode == `OPCODE_IJALR);
 
     assign mem_write = (opcode == `OPCODE_STYPE);
@@ -24,6 +26,8 @@ module decode_controller (
                          opcode == `OPCODE_ILOAD ||
                          opcode == `OPCODE_IJALR ||
                          opcode == `OPCODE_JTYPE);
+                         
+    assign s_type = opcode == `OPCODE_STYPE;
 
     always @(*) begin
         mem_store_type = 2'b11; // Disable writing

@@ -23,21 +23,23 @@ module decode_stage(
 );
 
     wire [4:0] rs1, rs2;
+    wire s_type;
     
     assign opcode = instruction[6:0];
     assign rd = instruction[11:7];
     assign rs1 = instruction[19:15];
     assign rs2 = instruction[24:20];
-    assign immediate = instruction[31:20]; // We will extend by 0 in next stage to reduce size of pipeline buffer
     assign func7 = instruction[31:25];
     assign func3 = instruction[14:12];
 
+    assign immediate = s_type ? {instruction[31:25],instruction[11:7]} : instruction[31:20];
 
     // Instantiate the controller module
     decode_controller decode_controller_inst (
         .opcode(opcode),
         .func3(func3),
         .ex_alu_src(alu_src),
+        .s_type(s_type),
         .mem_write(mem_write),
         .mem_load_type(mem_load_type),
         .mem_store_type(mem_store_type),

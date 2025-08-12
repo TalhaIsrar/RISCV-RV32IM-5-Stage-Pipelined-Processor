@@ -4,10 +4,9 @@ module alu_control(
     input [2:0] func3,
     input [6:0] func7,
     input [6:0] opcode,
-    output [3:0] alu_ctrl
+    output reg [3:0] ALUControl
 );
 
-    reg [3:0] ALUControl;
     reg [1:0] ALUOp;
 
     // Main control (opcode-based)

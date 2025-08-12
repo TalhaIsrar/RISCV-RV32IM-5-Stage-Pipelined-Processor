@@ -9,9 +9,10 @@
     add x5, x1, x2       # x5 = 5 + 3 = 8
     sub x6, x1, x3       # x6 = 5 - 2 = 3
     and x7, x2, x4       # x7 = 3 & 1 = 1 (binary 011 & 001 = 001)
+    nop
 
     # Store
-    sw x1, 0(x5)         # Store 5 at memory address 8
+    sw x12, 0(x5)         # Store 5 at memory address 8
 
     nop                  # Delay slot for memory write
     nop
