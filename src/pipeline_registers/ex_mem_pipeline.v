@@ -8,6 +8,7 @@ module ex_mem_pipeline(
     input [1:0] ex_memory_store_type,
     input ex_wb_load,
     input ex_wb_reg_file,
+    input [4:0] ex_wb_rd,
 
     output reg [31:0] mem_result,
     output reg [31:0] mem_op2_selected,
@@ -15,7 +16,8 @@ module ex_mem_pipeline(
     output reg [2:0] mem_memory_load_type,
     output reg [1:0] mem_memory_store_type,
     output reg mem_wb_load,
-    output reg mem_wb_reg_file
+    output reg mem_wb_reg_file,
+    output reg [4:0] mem_wb_rd;
 );
 
     always @(posedge clk or posedge rst) begin
@@ -27,6 +29,7 @@ module ex_mem_pipeline(
             mem_memory_store_type <= 2'b11;
             mem_wb_load <= 1'b0;
             mem_wb_reg_file <= 1'b0;
+            mem_wb_rd <= 5'b00000;
         end else begin
             mem_result <= ex_result;
             mem_op2_selected <= ex_op2_selected;
@@ -35,6 +38,7 @@ module ex_mem_pipeline(
             mem_memory_store_type <= ex_memory_store_type;
             mem_wb_load <= ex_wb_load;
             mem_wb_reg_file <= ex_wb_reg_file;
+            mem_wb_rd <= ex_wb_rd;
         end
     end
 
