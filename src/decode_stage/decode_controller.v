@@ -4,7 +4,7 @@ module decode_controller (
     input [6:0] opcode,
     input [2:0] func3,
     output ex_alu_src,
-    output s_type,
+    output s_type, // REMOVE LATER
     output mem_write,
     output reg [2:0] mem_load_type,
     output reg [1:0] mem_store_type,

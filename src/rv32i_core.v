@@ -11,7 +11,7 @@ module rv32i_core(
     wire [31:0] id_op1, ex_op1;
     wire [31:0] id_op2, ex_op2;
     wire [4:0]  id_wb_rd, ex_wb_rd;
-    wire [11:0] id_immediate, ex_immediate;
+    wire [31:0] id_immediate, ex_immediate;
     wire [6:0]  id_opcode, ex_opcode;
     wire        id_alu_src, ex_alu_src;
     wire [6:0]  id_func7, ex_func7;
@@ -120,6 +120,7 @@ module rv32i_core(
 
     // Instantiate the Execute stage module
     execute_stage execute_stage_inst (
+        .pc(ex_pc),
         .op1(ex_op1),
         .op2(ex_op2),
         .immediate(ex_immediate),
