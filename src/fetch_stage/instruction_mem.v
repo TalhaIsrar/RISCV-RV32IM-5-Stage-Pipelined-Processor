@@ -10,7 +10,7 @@ module instruction_mem(
 
     // Initialize memory using file
     initial begin
-        $readmemh("C:\\Users\\Talha\\Documents\\vivado\\riscv_rv32i_5_stage_pipeline_processor\\tb\\instructions.hex", mem);
+        $readmemh("C:\\Users\\Talha\\Documents\\vivado\\riscv_rv32i_5_stage_pipeline_processor\\programs\\instructions.hex", mem);
     end
 
     always @(posedge clk) begin
