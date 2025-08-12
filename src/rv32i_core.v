@@ -12,7 +12,7 @@ module rv32i_core(
     wire [31:0] id_op2, ex_op2;
     wire [4:0]  id_wb_rd, ex_wb_rd;
     wire [11:0] id_immediate, ex_immediate;
-    wire [1:0]  id_aluop, ex_aluop;
+    wire [6:0]  id_opcode, ex_opcode;
     wire        id_alu_src, ex_alu_src;
     wire [6:0]  id_func7, ex_func7;
     wire [2:0]  id_func3, ex_func3;
@@ -72,7 +72,7 @@ module rv32i_core(
         .op2(id_op2),
         .rd(id_wb_rd),
         .immediate(id_immediate),
-        .ALUOp(id_aluop),
+        .opcode(id_opcode),
         .alu_src(id_alu_src),
         .func7(id_func7),
         .func3(id_func3),
@@ -91,7 +91,7 @@ module rv32i_core(
         .id_op1(id_op1),
         .id_op2(id_op2),
         .id_immediate(id_immediate),
-        .id_aluop(id_aluop),
+        .id_opcode(id_opcode),
         .id_alu_src(id_alu_src),
         .id_func7(id_func7),
         .id_func3(id_func3),
@@ -106,7 +106,7 @@ module rv32i_core(
         .ex_op1(ex_op1),
         .ex_op2(ex_op2),
         .ex_immediate(ex_immediate),
-        .ex_aluop(ex_aluop),
+        .ex_opcode(ex_opcode),
         .ex_alu_src(ex_alu_src),
         .ex_func7(ex_func7),
         .ex_func3(ex_func3),
@@ -125,7 +125,7 @@ module rv32i_core(
         .immediate(ex_immediate),
         .func7(ex_func7),
         .func3(ex_func3),
-        .ALUOp(ex_aluop),
+        .opcode(ex_opcode),
         .ex_alu_src(ex_alu_src),
         .result(ex_result),
         .op2_selected(ex_op2_selected)
@@ -184,7 +184,7 @@ module rv32i_core(
     );
 
     // Instantiate the Write Back stage module
-    mem_stage mem_stage_inst (
+    writeback_stage writeback_stage_inst (
         .wb_load(wb_load),
         .mem_read_data(wb_read_data),
         .alu_result(wb_calculated_result),

@@ -4,7 +4,7 @@ module execute_stage(
     input [11:0] immediate,
     input [6:0] func7,
     input [2:0] func3,
-    input [1:0] ALUOp,
+    input [6:0] opcode,
     input ex_alu_src,
     output wire [31:0] result,
     output wire [31:0] op2_selected
@@ -19,7 +19,7 @@ module execute_stage(
     alu_control alu_control_inst (
         .func3(func3),
         .func7(func7),
-        .ALUOp(ALUOp),
+        .opcode(opcode),
         .alu_ctrl(alu_ctrl)
     );   
 

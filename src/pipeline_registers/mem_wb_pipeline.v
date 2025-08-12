@@ -10,7 +10,7 @@ module mem_wb_pipeline(
     output reg wb_load,
     output reg wb_reg_file,
     output [31:0] wb_read_data,
-    output reg [31:0] wb_calculated_result
+    output reg [31:0] wb_calculated_result,
     output reg [4:0] wb_rd
 );
 

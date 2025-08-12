@@ -17,7 +17,7 @@ module ex_mem_pipeline(
     output reg [1:0] mem_memory_store_type,
     output reg mem_wb_load,
     output reg mem_wb_reg_file,
-    output reg [4:0] mem_wb_rd;
+    output reg [4:0] mem_wb_rd
 );
 
     always @(posedge clk or posedge rst) begin

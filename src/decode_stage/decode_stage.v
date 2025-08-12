@@ -11,7 +11,7 @@ module decode_stage(
     output wire [31:0] op2,
     output wire [4:0] rd,
     output wire [11:0] immediate,
-    output wire [1:0] ALUOp,
+    output wire [6:0] opcode,
     output wire alu_src,
     output wire [6:0] func7,
     output wire [2:0] func3,
@@ -22,7 +22,6 @@ module decode_stage(
     output wire wb_reg_file
 );
 
-    wire [6:0] opcode;
     wire [4:0] rs1, rs2;
     
     assign opcode = instruction[6:0];
@@ -38,7 +37,6 @@ module decode_stage(
     decode_controller decode_controller_inst (
         .opcode(opcode),
         .func3(func3),
-        .ALUOp(ALUOp),
         .ex_alu_src(alu_src),
         .mem_write(mem_write),
         .mem_load_type(mem_load_type),

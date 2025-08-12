@@ -5,7 +5,7 @@ module id_ex_pipeline(
     input [31:0] id_op1,
     input [31:0] id_op2,
     input [11:0] id_immediate,
-    input [1:0]  id_aluop,
+    input [6:0]  id_opcode,
     input id_alu_src,
     input [6:0]  id_func7,
     input [2:0]  id_func3,
@@ -20,7 +20,7 @@ module id_ex_pipeline(
     output reg [31:0] ex_op1,
     output reg [31:0] ex_op2,
     output reg [11:0] ex_immediate,
-    output reg [1:0] ex_aluop,
+    output reg [6:0] ex_opcode,
     output reg ex_alu_src,
     output reg [6:0] ex_func7,
     output reg [2:0] ex_func3,
@@ -38,7 +38,7 @@ module id_ex_pipeline(
             ex_op1 <= 32'h00000000;
             ex_op2 <= 32'h00000000;
             ex_immediate <= 12'h000;
-            ex_aluop <= 2'b00;
+            ex_opcode <= 7'b0000000;
             ex_alu_src <= 1'b0;
             ex_func7 <= 7'b0000000;
             ex_func3 <= 3'b000;
@@ -53,7 +53,7 @@ module id_ex_pipeline(
             ex_op1 <= id_op1;
             ex_op2 <= id_op2;
             ex_immediate <= id_immediate;
-            ex_aluop <= id_aluop;
+            ex_opcode <= id_opcode;
             ex_alu_src <= id_alu_src;
             ex_func7 <= id_func7;
             ex_func3 <= id_func3;
