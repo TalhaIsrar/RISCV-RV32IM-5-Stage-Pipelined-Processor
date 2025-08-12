@@ -1,36 +1,36 @@
 # Toolchain prefix
 RISCV_PREFIX = riscv64-unknown-elf
 
-# Compiler & binutils
+# Tools
 CC      = $(RISCV_PREFIX)-gcc
 OBJCOPY = $(RISCV_PREFIX)-objcopy
 OBJDUMP = $(RISCV_PREFIX)-objdump
 
-# Files
+# Source and output files
 SRC     = instructions.s
 ELF     = instructions.elf
 BIN     = instructions.bin
 HEX     = instructions.hex
 
-# Default target
-all: $(BIN) $(HEX) dump
+# Default target: assemble, create binary, convert to hex, and dump disassembly
+all: $(HEX) dump
 
-# Assemble & link (no stdlib, start at address 0x0)
+# Compile assembly to ELF (RV32I, no standard libs, start at 0x0)
 $(ELF): $(SRC)
-	$(CC) -nostdlib -Ttext=0x0 -o $@ $<
+	$(CC) -march=rv32i -mabi=ilp32 -nostdlib -Ttext=0x0 -o $@ $<
 
 # Convert ELF to raw binary
 $(BIN): $(ELF)
-	$(OBJCOPY) -O binary $(ELF) $(BIN)
+	$(OBJCOPY) -O binary $< $@
 
-# Convert binary to hex
+# Convert binary to hex file (one 32-bit instruction per line)
 $(HEX): $(BIN)
-	hexdump -v -e '1/4 "%08x\n"' $(BIN) > $(HEX)
+	xxd -p -c4 $(BIN) | tac | awk '{print substr($$0,7,2) substr($$0,5,2) substr($$0,3,2) substr($$0,1,2)}' | tac > $@
 
-# Show disassembly
+# Generate disassembly dump for reference
 dump: $(ELF)
-	$(OBJDUMP) -d $(ELF) > program.dump
-	@echo "Assembly dump saved to program.dump"
+	$(OBJDUMP) -d --no-show-raw-insn $< > program.dump
+	@echo "Disassembly saved to program.dump"
 
 # Clean build files
 clean:
