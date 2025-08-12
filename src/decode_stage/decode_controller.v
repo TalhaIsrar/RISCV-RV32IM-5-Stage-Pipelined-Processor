@@ -1,3 +1,5 @@
+`include "defines.vh"
+
 module decode_controller (
     input [6:0] opcode,
     input [2:0] func3,

@@ -27,7 +27,7 @@ module id_ex_pipeline(
     output reg [2:0] ex_mem_load_type,
     output reg [1:0] ex_mem_store_type,
     output reg ex_wb_load,
-    output reg ex_wb_reg_file,
+    output reg ex_wb_reg_file
 );
 
     always @(posedge clk or posedge rst) begin

@@ -1,8 +1,11 @@
 module decode_stage(
     input clk,
     input rst,
-    input instruction,
-    input pc,
+    input [31:0] instruction,
+    input [31:0] pc,
+    input reg_file_wr_en,
+    input [4:0] reg_file_wr_addr,
+    input [31:0] reg_file_wr_data,
 
     output wire [31:0] op1,
     output wire [31:0] op2,
@@ -15,7 +18,8 @@ module decode_stage(
     output wire mem_write,
     output wire [2:0] mem_load_type,
     output wire[1:0] mem_store_type,
-    output wire wb_load
+    output wire wb_load,
+    output wire wb_reg_file
 );
 
     wire [6:0] opcode;
@@ -39,15 +43,16 @@ module decode_stage(
         .mem_write(mem_write),
         .mem_load_type(mem_load_type),
         .mem_store_type(mem_store_type),
-        .wb_load(wb_load)
+        .wb_load(wb_load),
+        .wb_reg_file(wb_reg_file)
     );
 
     // Instantiate the register file module
     register_file register_file_inst (
         .clk(clk),
-        .wr_en(),
-        .wr_addr(),
-        .wr_data(),
+        .wr_en(reg_file_wr_en),
+        .wr_addr(reg_file_wr_addr),
+        .wr_data(reg_file_wr_data),
         .rs1_addr(rs1),
         .rs2_addr(rs2),
         .op1(op1),

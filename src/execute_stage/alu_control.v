@@ -7,6 +7,9 @@ module alu_control(
     output [3:0] alu_ctrl
 );
 
+    reg [1:0] ALUOp;
+    reg [3:0] ALUControl;
+
     // Main control (opcode-based)
     always @(*) begin
         case (opcode)

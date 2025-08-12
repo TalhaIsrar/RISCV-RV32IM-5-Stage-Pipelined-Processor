@@ -24,7 +24,7 @@ module ex_mem_pipeline(
             mem_op2_selected <= 32'h00000000;
             mem_memory_write <= 1'b0;
             mem_memory_load_type <= 3'b111;
-            mem_memory_store_type <= 2'b00;
+            mem_memory_store_type <= 2'b11;
             mem_wb_load <= 1'b0;
             mem_wb_reg_file <= 1'b0;
         end else begin
