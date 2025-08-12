@@ -3,24 +3,11 @@
 module alu_control(
     input [2:0] func3,
     input [6:0] func7,
-    input [6:0] opcode,
+    input [1:0] ALUOp,
     output [3:0] alu_ctrl
 );
 
-    reg [1:0] ALUOp;
     reg [3:0] ALUControl;
-
-    // Main control (opcode-based)
-    always @(*) begin
-        case (opcode)
-            OPCODE_RTYPE: ALUOp = 2'b10; // R-type
-            OPCODE_ITYPE: ALUOp = 2'b10; // I-type ALU
-            OPCODE_ILOAD: ALUOp = 2'b00; // Load
-            OPCODE_STYPE: ALUOp = 2'b00; // Store
-            OPCODE_BTYPE: ALUOp = 2'b01; // Branch
-            default:      ALUOp = 2'b00;
-        endcase
-    end
 
     // ALU control (funct-based)
     always @(*) begin

@@ -3,8 +3,8 @@
 module decode_controller (
     input [6:0] opcode,
     input [2:0] func3,
-    output [6:0] ex_opcode,
     output ex_alu_src,
+    output reg [1:0] ALUOp,
     output mem_write,
     output reg [2:0] mem_load_type,
     output reg [1:0] mem_store_type,
@@ -12,7 +12,6 @@ module decode_controller (
     output wb_reg_file
 );
 
-    assign ex_opcode = opcode;
     assign ex_alu_src  = (opcode == OPCODE_ITYPE ||
                          opcode == OPCODE_ILOAD ||
                          opcode == OPCODE_IJALR);
@@ -51,6 +50,18 @@ module decode_controller (
                 default: mem_load_type = 3'b111; // Load full value
             endcase
         end
+    end
+
+    // Main control (opcode-based)
+    always @(*) begin
+        case (opcode)
+            OPCODE_RTYPE: ALUOp = 2'b10; // R-type
+            OPCODE_ITYPE: ALUOp = 2'b10; // I-type ALU
+            OPCODE_ILOAD: ALUOp = 2'b00; // Load
+            OPCODE_STYPE: ALUOp = 2'b00; // Store
+            OPCODE_BTYPE: ALUOp = 2'b01; // Branch
+            default:      ALUOp = 2'b00;
+        endcase
     end
 
 endmodule
