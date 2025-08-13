@@ -10,6 +10,7 @@ module rv32i_core(
     wire [31:0] if_pc, id_pc;
 
     // ID/EX Connection
+    wire [31:0] ex_pc;
     wire [31:0] id_op1, ex_op1;
     wire [31:0] id_op2, ex_op2;
     wire [4:0]  id_wb_rd, ex_wb_rd;
