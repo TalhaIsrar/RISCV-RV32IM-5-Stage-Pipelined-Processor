@@ -1,62 +1,66 @@
     # Initialize registers
-    addi x1, x0, 5        # x1 = 5
-    addi x2, x0, 3        # x2 = 3
-    addi x3, x0, 2        # x3 = 2
-    addi x4, x0, 1        # x4 = 1
-    addi x10,x0, 1023     # x10 = 1023
+    addi x1, x0, 5        
+    addi x2, x0, 3        
+    addi x3, x0, 2        
+    addi x4, x0, 1        
+    addi x10, x0, 1023    
 
     # R-type computations
-    add x5, x1, x2        # x5 = 5 + 3 = 8
-    sub x6, x1, x3        # x6 = 5 - 2 = 3
-    and x7, x2, x4        # x7 = 3 & 1 = 1
+    add x5, x1, x2        
+    sub x6, x1, x3        
+    and x7, x2, x4        
 
     # Store/load
     nop
-    sw x1, 0(x5)          # MEM[8] = 5
+    sw x1, 0(x5)          
     nop
     nop
     nop
-    lw x8, 0(x5)          # x8 = 5
+    lw x8, 0(x5)          
 
-    addi x9, x6, 10       # x9 = 3 + 10 = 13
+    addi x9, x6, 10       
 
-    sb x10, 4(x5)         # MEM[12] = 0xFF
+    sb x10, 4(x5)         
     nop
     nop
     nop
-    lb x11, 4(x5)         # x11 = 0xFF
+    lb x11, 4(x5)         
 
     # Branch instructions
-    beq x1, x2, skip1     # x1 != x2, skip branch not taken
+    beq x1, x2, skip1     
     nop
     nop
     nop
-    addi x12, x0, 1       # x12 = 1
+    addi x12, x0, 1       
 
 skip1:
-    bne x1, x2, taken1    # x1 != x2, branch taken
+    bne x1, x2, taken1    
     nop
     nop
     nop
-    addi x13, x0, 2       # Skipped if branch taken
+    addi x13, x0, 2       
 
 taken1:
-    addi x14, x0, 3       # x14 = 3
+    addi x14, x0, 3       
 
     # JAL instruction
-    jal x15, jump_label   # x15 = PC+4, PC = jump_label
-
+    jal x15, jump_label   
     nop
     nop
     nop
-    addi x16, x0, 4       # Should be skipped
+    addi x16, x0, 4       
 
 jump_label:
-    addi x17, x0, 5       # x17 = 5
+    addi x17, x0, 5       
 
     # JALR instruction
-    addi x18, x0, 40      # x18 = 28 (in HEX)
+    addi x18, x0, 40  
+
+    # LUI instruction
+    lui x20, 0x12345       # x20 = 0x12345000
+
+    # AUIPC instruction
+    auipc x21, 0x10        # x21 = PC + 0x10000
     nop
-    nop
-    nop
-    jalr x19, x18, 0      # x19 = PC+4, PC = x18 + 0
+
+    jalr x19, x18, 0

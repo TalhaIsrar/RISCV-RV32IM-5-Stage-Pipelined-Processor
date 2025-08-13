@@ -15,6 +15,8 @@ module decode_controller (
     assign ex_alu_src  = (opcode == `OPCODE_ITYPE ||
                          opcode == `OPCODE_ILOAD ||
                          opcode == `OPCODE_STYPE ||
+                         opcode == `OPCODE_UTYPE ||
+                         opcode == `OPCODE_AUIPC ||
                          opcode == `OPCODE_IJALR);
 
     assign mem_write = (opcode == `OPCODE_STYPE);
@@ -25,6 +27,7 @@ module decode_controller (
                          opcode == `OPCODE_ITYPE ||
                          opcode == `OPCODE_ILOAD ||
                          opcode == `OPCODE_IJALR ||
+                         opcode == `OPCODE_AUIPC ||
                          opcode == `OPCODE_JTYPE);
                          
     assign s_type = opcode == `OPCODE_STYPE;

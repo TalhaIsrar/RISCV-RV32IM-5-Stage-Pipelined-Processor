@@ -24,7 +24,7 @@ module alu_control(
     // ALU control (funct-based)
     always @(*) begin
         case (ALUOp)
-            2'b00: ALUControl = `ALU_ADD;  // Load/Store use ADD
+            2'b00: ALUControl = `ALU_ADD;  // Load/Store/LUI use ADD
             2'b01: begin
                 case (func3)
                     `BTYPE_BLT:  ALUControl  = `ALU_SLT; // SLT signed

@@ -43,6 +43,8 @@ module decode_stage(
                 immediate = {{19{instruction[31]}},instruction[31],instruction[7],instruction[30:25],instruction[11:8],1'b0};
             `OPCODE_UTYPE: 
                 immediate = {instruction[31:12],12'h000};
+            `OPCODE_AUIPC: 
+                immediate = {instruction[31:12],12'h000};
             default:       
                 immediate = {{20{instruction[31]}},instruction[31:20]};
         endcase

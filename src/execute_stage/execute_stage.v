@@ -29,6 +29,14 @@ module execute_stage(
                 op1_alu = pc;
                 op2_alu = 32'd4;
             end
+            `OPCODE_UTYPE: begin
+                op1_alu = 32'h00000000;
+                op2_alu = immediate;
+            end
+            `OPCODE_AUIPC: begin
+                op1_alu = pc;
+                op2_alu = immediate;
+            end
             default: begin
                 op1_alu = op1;
                 op2_alu = ex_alu_src ? immediate : op2;
