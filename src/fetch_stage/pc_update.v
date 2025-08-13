@@ -1,10 +1,9 @@
 module pc_update(
     input [31:0] pc,
-
+    input [31:0] pc_jump_addr,
+    input jump_en,
     output [31:0] next_pc
 );
-
-    assign next_pc = pc + 4; // Increment PC by 4 for next instruction
-    // TODO : Handle branch and jump instructions to update next_pc accordingly
+    assign next_pc = jump_en ? pc_jump_addr : pc + 4
 
 endmodule

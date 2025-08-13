@@ -1,6 +1,6 @@
 `include "../defines.vh"
 
-module pc_update(
+module pc_jump(
     input [31:0] pc,
     input [31:0] immediate,
     input [31:0] op1,
@@ -21,7 +21,6 @@ module pc_update(
     assign jump_inst = (opcode ==`OPCODE_JTYPE) || (opcode ==`OPCODE_IJALR);
     assign branch_inst = (opcode == `OPCODE_BTYPE);
 
-    // ALU control (funct-based)
     always @(*) begin
         if (jump_inst)
             modify_pc = 1'b1;
@@ -40,20 +39,5 @@ module pc_update(
                 modify_pc = 1'b0;
         end  
     end
-
-        case (ALUOp)
-            2'b00: ALUControl = `ALU_ADD;  // Load/Store use ADD
-            2'b01: ALUControl = `ALU_SUB;  // Branch compare
-            2'b10: begin                  // R-type / I-type
-                case (func3)
-                    3'b000: ALUControl = (func7[5] & opcode[5]) ? `ALU_SUB : `ALU_ADD;
-                    3'b001: ALUControl = `ALU_SLL;
-                endcase
-            end
-            default: ALUControl = `ALU_ADD;
-        endcase
-    end
-
-    assign modify_pc = jump_inst ? 1'b1 : (branch_inst ? : );
 
 endmodule

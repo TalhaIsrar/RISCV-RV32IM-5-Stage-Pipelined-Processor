@@ -2,6 +2,8 @@ module rv32i_core(
     input clk,
     input rst
 );
+    wire [31:0] ex_if_pc_jump_addr;
+    wire ex_jump_en;
 
     // IF/ID Connection
     wire [31:0] if_instruction, id_instruction;
@@ -45,6 +47,8 @@ module rv32i_core(
     fetch_stage fetch_stage_inst (
         .clk(clk),
         .rst(rst),
+        .pc_jump_addr(ex_if_pc_jump_addr),
+        .jump_en(ex_if_jump_en),
         .instruction(if_instruction),
         .pc(if_pc)
     );
@@ -129,7 +133,9 @@ module rv32i_core(
         .opcode(ex_opcode),
         .ex_alu_src(ex_alu_src),
         .result(ex_result),
-        .op2_selected(ex_op2_selected)
+        .op2_selected(ex_op2_selected),
+        .pc_jump_addr(ex_if_pc_jump_addr),
+        .jump_en(ex_if_jump_en)
     );
 
     // Instantiate the EX/MEM pipeline module

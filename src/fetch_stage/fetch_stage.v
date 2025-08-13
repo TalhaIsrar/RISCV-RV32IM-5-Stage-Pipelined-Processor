@@ -1,6 +1,8 @@
 module fetch_stage(
     input clk,
     input rst,
+    input [31:0] pc_jump_addr,
+    input jump_en,
     output [31:0] instruction,
     output [31:0] pc
 );
@@ -18,6 +20,8 @@ module fetch_stage(
     // Instantiate the PC update module
     pc_update pc_update_inst (
         .pc(pc),
+        .pc_jump_addr(pc_jump_addr),
+        .jump_en(jump_en),
         .next_pc(next_pc)
     );
 
