@@ -68,7 +68,6 @@ module rv32i_core(
         .clk(clk),
         .rst(rst),
         .instruction(id_instruction),
-        .pc(id_pc),
         .reg_file_wr_en(wb_reg_file),   // Come from WB stage
         .reg_file_wr_addr(wb_rd), // Come from WB stage
         .reg_file_wr_data(wb_result), // Come from WB stage

@@ -27,10 +27,10 @@ module alu_control(
             2'b00: ALUControl = `ALU_ADD;  // Load/Store use ADD
             2'b01: begin
                 case (func3)
-                    `BTYPE_BLT:  modify_pc  = `ALU_SLT; // SLT signed
-                    `BTYPE_BGE:  modify_pc  = `ALU_SLT; // SLT signed
-                    `BTYPE_BLTU: modify_pc  = `ALU_SLTU; // SLTU unsigned
-                    `BTYPE_BGEU: modify_pc  = `ALU_SLTU; // SLTU unsigned
+                    `BTYPE_BLT:  ALUControl  = `ALU_SLT; // SLT signed
+                    `BTYPE_BGE:  ALUControl  = `ALU_SLT; // SLT signed
+                    `BTYPE_BLTU: ALUControl  = `ALU_SLTU; // SLTU unsigned
+                    `BTYPE_BGEU: ALUControl  = `ALU_SLTU; // SLTU unsigned
                     default:     ALUControl = `ALU_SUB; // SUB
                 endcase
             end

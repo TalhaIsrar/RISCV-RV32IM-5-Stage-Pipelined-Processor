@@ -8,7 +8,7 @@ module execute_stage(
     input [6:0] opcode,
     input ex_alu_src,
     output wire [31:0] result,
-    output reg [31:0] op2_selected,
+    output wire [31:0] op2_selected,
     output wire [31:0] pc_jump_addr,
     output wire jump_en
 );

@@ -1,3 +1,5 @@
+`include "../defines.vh"
+
 module decode_stage(
     input clk,
     input rst,
@@ -33,18 +35,19 @@ module decode_stage(
 
     always @(*) begin
         case (opcode)
-            `OPCODE_STYPE: immediate = {20{instruction[31]},instruction[31:25],instruction[11:7]}; 
-            `OPCODE_JTYPE: immediate = {11{instruction[31]},instruction[31],instruction[19:12],instruction[20],instruction[30:21],1'b0};
-            `OPCODE_BTYPE: immediate = {19{instruction[31]},instruction[31],instruction[7],instruction[30:25],instruction[11:8],1'b0};
-            `OPCODE_UTYPE: immediate = {instruction[31:12],12'h000};
-            default:       immediate = {20{instruction[31]},instruction[31:20]};
+            `OPCODE_STYPE: 
+                immediate = {{20{instruction[31]}},instruction[31:25],instruction[11:7]}; 
+            `OPCODE_JTYPE: 
+                immediate = {{11{instruction[31]}},instruction[31],instruction[19:12],instruction[20],instruction[30:21],1'b0};
+            `OPCODE_BTYPE: 
+                immediate = {{19{instruction[31]}},instruction[31],instruction[7],instruction[30:25],instruction[11:8],1'b0};
+            `OPCODE_UTYPE: 
+                immediate = {instruction[31:12],12'h000};
+            default:       
+                immediate = {{20{instruction[31]}},instruction[31:20]};
         endcase
     end
     
-    assign immediate = s_type ? 
-                {20{immediate[31]},instruction[31:25],instruction[11:7]} : 
-                {20{immediate[31]},instruction[31:20]};
-
     // Instantiate the controller module
     decode_controller decode_controller_inst (
         .opcode(opcode),
