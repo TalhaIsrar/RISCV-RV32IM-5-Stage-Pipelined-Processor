@@ -24,7 +24,10 @@ module execute_stage(
         .immediate(immediate),
         .op1(op1),
         .opcode(opcode),
-        .update_pc(pc_jump)
+        .func3(func3),
+        .alu_result(result),
+        .update_pc(pc_jump),
+        .modify_pc()
     );
 
     // Instantiate the ALU Controller

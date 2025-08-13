@@ -20,3 +20,11 @@
 `define ALU_SRA  4'b0111
 `define ALU_SLT  4'b1000
 `define ALU_SLTU 4'b1001
+
+// B Type Codes
+`define BTYPE_BEQ  3'b000
+`define BTYPE_BNE  3'b001
+`define BTYPE_BLT  3'b100
+`define BTYPE_BGE  3'b101
+`define BTYPE_BLTU 3'b110
+`define BTYPE_BGEU 3'b111

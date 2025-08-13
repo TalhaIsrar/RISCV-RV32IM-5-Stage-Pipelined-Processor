@@ -25,7 +25,16 @@ module alu_control(
     always @(*) begin
         case (ALUOp)
             2'b00: ALUControl = `ALU_ADD;  // Load/Store use ADD
-            2'b01: ALUControl = `ALU_SUB;  // Branch compare
+            2'b01: begin
+                case (func3)
+                    `BTYPE_BLT:  modify_pc  = `ALU_SLT; // SLT signed
+                    `BTYPE_BGE:  modify_pc  = `ALU_SLT; // SLT signed
+                    `BTYPE_BLTU: modify_pc  = `ALU_SLTU; // SLTU unsigned
+                    `BTYPE_BGEU: modify_pc  = `ALU_SLTU; // SLTU unsigned
+                    default:     ALUControl = `ALU_SUB; // SUB
+                endcase
+            end
+            
             2'b10: begin                  // R-type / I-type
                 case (func3)
                     3'b000: ALUControl = (func7[5] & opcode[5]) ? `ALU_SUB : `ALU_ADD;
