@@ -1,6 +1,5 @@
 module btb_file (
     input clk,
-    input rst,
     input [2:0] read_index, // 2^3 = 8 possible sets
     input [2:0] update_index,
     input [2:0] write_index,
