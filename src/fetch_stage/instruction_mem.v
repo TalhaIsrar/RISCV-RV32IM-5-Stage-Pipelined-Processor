@@ -2,6 +2,8 @@ module instruction_mem(
     input clk,
     input rst,
     input [31:0] pc,
+    input read_en,
+    input flush,
     output reg [31:0] instruction
 );
 
@@ -16,7 +18,9 @@ module instruction_mem(
     always @(posedge clk) begin
         if (rst) begin
             instruction <= 32'h00000000; // Reset instruction to NOP
-        end else begin
+        end else if (flush) begin
+            instruction <= 32'h00000013; // Flush instruction to NOP
+        end else if (read_en) begin
             instruction <= mem[pc[11:2]]; // Fetch instruction based on PC
         end
     end

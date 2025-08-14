@@ -20,7 +20,7 @@ module rv32i_core(
     wire [31:0] ex_pc;
     wire [31:0] id_op1, ex_op1;
     wire [31:0] id_op2, ex_op2;
-    wire [4:0]  id_rs1, ex_rs2;
+    wire [4:0]  id_rs1, ex_rs1;
     wire [4:0]  id_rs2, ex_rs2;
     wire [4:0]  id_wb_rd, ex_wb_rd;
     wire [31:0] id_immediate, ex_immediate;
@@ -62,6 +62,7 @@ module rv32i_core(
         .clk(clk),
         .rst(rst),
         .pc_en(pc_en),
+        .flush(if_id_pipeline_flush),
         .pc_jump_addr(ex_if_pc_jump_addr),
         .jump_en(ex_if_jump_en),
         .instruction(if_instruction),
@@ -72,8 +73,8 @@ module rv32i_core(
     if_id_pipeline if_id_pipeline_inst (
         .clk(clk),
         .rst(rst),
-        .pipeline_flush(),
-        .pipeline_en(),
+        .pipeline_flush(if_id_pipeline_flush),
+        .pipeline_en(if_id_pipeline_en),
         .if_pc(if_pc),
         .if_instruction(if_instruction),
         .id_pc(id_pc),

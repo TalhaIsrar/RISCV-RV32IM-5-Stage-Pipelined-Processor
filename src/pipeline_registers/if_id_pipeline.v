@@ -14,7 +14,7 @@ module if_id_pipeline(
         if (rst) begin
             id_pc <= 32'h00000000;
         end else if (pipeline_flush) begin
-            id_pc <= 32'h00000013;      // Push NOP into pipeline
+            id_pc <= id_pc;
         end else if (pipeline_en) begin
             id_pc <= if_pc;    
         end

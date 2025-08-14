@@ -2,6 +2,7 @@ module fetch_stage(
     input clk,
     input rst,
     input pc_en,
+    input flush,
     input [31:0] pc_jump_addr,
     input jump_en,
     output [31:0] instruction,
@@ -32,6 +33,8 @@ module fetch_stage(
         .clk(clk),
         .rst(rst),
         .pc(pc),
+        .flush(flush),
+        .read_en(pc_en),
         .instruction(instruction)
     );
 

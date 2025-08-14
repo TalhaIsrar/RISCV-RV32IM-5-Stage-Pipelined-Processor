@@ -1,10 +1,10 @@
 `include "defines.vh"
 
 module forwarding_unit(
-    input [31:0] rs1,
-    input [31:0] rs2,
-    input [31:0] rd_mem,
-    input [31:0] rd_wb,
+    input [4:0] rs1,
+    input [4:0] rs2,
+    input [4:0] rd_mem,
+    input [4:0] rd_wb,
     input reg_file_wr_mem,
     input reg_file_wr_wb,
 

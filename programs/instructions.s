@@ -38,7 +38,7 @@ jump_label:
     addi x17, x0, 5       
 
     # JALR instruction
-    addi x18, x0, 40  
+    addi x18, x0, 10 
 
     # LUI instruction
     lui x20, 0x12345       # x20 = 0x12345000

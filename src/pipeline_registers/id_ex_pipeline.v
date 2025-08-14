@@ -59,7 +59,7 @@ module id_ex_pipeline(
             ex_rs1 <= 5'b00000;
             ex_rs2 <= 5'b00000;
         end else if (pipeline_flush) begin
-            ex_pc <= 32'h00000000;
+            ex_pc <= ex_pc;
             ex_op1 <= 32'h00000000;
             ex_op2 <= 32'h00000000;
             ex_immediate <= 32'h00000000;
