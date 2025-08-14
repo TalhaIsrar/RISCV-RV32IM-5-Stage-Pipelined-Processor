@@ -1,6 +1,7 @@
 module fetch_stage(
     input clk,
     input rst,
+    input pc_en,
     input [31:0] pc_jump_addr,
     input jump_en,
     output [31:0] instruction,
@@ -14,6 +15,7 @@ module fetch_stage(
         .clk(clk),
         .rst(rst),
         .next_pc(next_pc),
+        .pc_en(pc_en);
         .pc(pc)
     );
 

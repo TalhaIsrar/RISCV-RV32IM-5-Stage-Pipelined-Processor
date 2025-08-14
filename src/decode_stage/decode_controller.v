@@ -33,27 +33,27 @@ module decode_controller (
     assign s_type = opcode == `OPCODE_STYPE;
 
     always @(*) begin
-        mem_store_type = 2'b11; // Disable writing
+        mem_store_type = `STORE_DEF; // Disable writing
         if (mem_write) begin
             case (func3)
-                3'b000: mem_store_type = 2'b00;
-                3'b001: mem_store_type = 2'b01;
-                3'b010: mem_store_type = 2'b10;
-                default: mem_store_type = 2'b11; // Disable writing
+                3'b000: mem_store_type = `STORE_SB;
+                3'b001: mem_store_type = `STORE_SH;
+                3'b010: mem_store_type = `STORE_SW;
+                default:mem_store_type = `STORE_DEF; // Disable writing
             endcase
         end
     end
 
     always @(*) begin
-        mem_load_type = 3'b111; // Load full value
+        mem_load_type = `LOAD_DEF; // Load full value
         if (wb_load) begin
             case (func3)
-                3'b000: mem_load_type = 3'b000;
-                3'b001: mem_load_type = 3'b001;
-                3'b010: mem_load_type = 3'b010;
-                3'b100: mem_load_type = 3'b011;
-                3'b101: mem_load_type = 3'b100;
-                default: mem_load_type = 3'b111; // Load full value
+                3'b000: mem_load_type = `LOAD_LB;
+                3'b001: mem_load_type = `LOAD_HD;
+                3'b010: mem_load_type = `LOAD_LW;
+                3'b100: mem_load_type = `LOAD_LBU;
+                3'b101: mem_load_type = `LOAD_LHU;
+                default:mem_load_type = `LOAD_DEF; // Load full value
             endcase
         end
     end

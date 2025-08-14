@@ -1,6 +1,10 @@
+`include "../defines.vh"
+
 module id_ex_pipeline(
     input clk,
     input rst,
+    input pipeline_flush,
+
     input [31:0] id_pc,
     input [31:0] id_op1,
     input [31:0] id_op2,
@@ -44,6 +48,23 @@ module id_ex_pipeline(
             ex_immediate <= 32'h00000000;
             ex_opcode <= 7'b0000000;
             ex_alu_src <= 1'b0;
+            ex_func7 <= 7'b0000000;
+            ex_func3 <= 3'b000;
+            ex_mem_write <= 1'b0;
+            ex_mem_load_type <= 3'b111;
+            ex_mem_store_type <= 2'b00;
+            ex_wb_load <= 1'b0;
+            ex_wb_reg_file <= 1'b0;
+            ex_wb_rd <= 5'b00000;
+            ex_rs1 <= 5'b00000;
+            ex_rs2 <= 5'b00000;
+        end else if (pipeline_flush) begin
+            ex_pc <= 32'h00000000;
+            ex_op1 <= 32'h00000000;
+            ex_op2 <= 32'h00000000;
+            ex_immediate <= 32'h00000000;
+            ex_opcode <= OPCODE_ITYPE;
+            ex_alu_src <= 1'b1;
             ex_func7 <= 7'b0000000;
             ex_func3 <= 3'b000;
             ex_mem_write <= 1'b0;

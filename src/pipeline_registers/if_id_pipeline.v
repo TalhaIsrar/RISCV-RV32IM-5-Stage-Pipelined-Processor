@@ -1,6 +1,9 @@
 module if_id_pipeline(
     input clk,
     input rst,
+    input pipeline_flush,
+    input pipeline_en,
+    
     input [31:0] if_pc,
     input [31:0] if_instruction,
     output reg [31:0] id_pc,
@@ -10,8 +13,10 @@ module if_id_pipeline(
     always @(posedge clk or posedge rst) begin
         if (rst) begin
             id_pc <= 32'h00000000;
-        end else begin
-            id_pc <= if_pc;
+        end else if (pipeline_flush) begin
+            id_pc <= 32'h00000013;      // Push NOP into pipeline
+        end else if (pipeline_en) begin
+            id_pc <= if_pc;    
         end
     end
 

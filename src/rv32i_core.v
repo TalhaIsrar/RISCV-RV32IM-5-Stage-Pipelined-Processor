@@ -2,8 +2,15 @@ module rv32i_core(
     input clk,
     input rst
 );
+    // EX/IF Signals
     wire [31:0] ex_if_pc_jump_addr;
     wire ex_jump_en;
+
+    // Hazard Unit Signals
+    wire pc_en;
+    wire if_id_pipeline_flush;
+    wire if_id_pipeline_en;
+    wire id_ex_pipeline_flush;
 
     // IF/ID Connection
     wire [31:0] if_instruction, id_instruction;
@@ -54,6 +61,7 @@ module rv32i_core(
     fetch_stage fetch_stage_inst (
         .clk(clk),
         .rst(rst),
+        .pc_en(pc_en),
         .pc_jump_addr(ex_if_pc_jump_addr),
         .jump_en(ex_if_jump_en),
         .instruction(if_instruction),
@@ -64,6 +72,8 @@ module rv32i_core(
     if_id_pipeline if_id_pipeline_inst (
         .clk(clk),
         .rst(rst),
+        .pipeline_flush(),
+        .pipeline_en(),
         .if_pc(if_pc),
         .if_instruction(if_instruction),
         .id_pc(id_pc),
@@ -99,6 +109,7 @@ module rv32i_core(
     id_ex_pipeline id_ex_pipeline_inst (
         .clk(clk),
         .rst(rst),
+        .pipeline_flush(id_ex_pipeline_flush),
         .id_pc(id_pc),
         .id_op1(id_op1),
         .id_op2(id_op2),
@@ -164,6 +175,20 @@ module rv32i_core(
         .op2_selected(ex_op2_selected),
         .pc_jump_addr(ex_if_pc_jump_addr),
         .jump_en(ex_if_jump_en)
+    );
+
+    // Instantiate the Hazard Unit module
+    hazard_unit hazard_unit_inst (
+        .id_rs1(id_rs1),
+        .id_rs2(id_rs2),
+        .opcode(id_opcode),
+        .ex_rd(ex_wb_rd),
+        .ex_load_inst(ex_wb_load),
+        .jump_branch_taken(ex_if_jump_en),
+        .if_id_pipeline_flush(if_id_pipeline_flush),
+        .if_id_pipeline_en(if_id_pipeline_en),
+        .id_ex_pipeline_flush(id_ex_pipeline_flush),
+        .pc_en(pc_en)
     );
 
     // Instantiate the EX/MEM pipeline module

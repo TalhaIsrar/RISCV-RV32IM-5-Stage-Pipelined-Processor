@@ -33,3 +33,21 @@
 `define FORWARD_ORG 2'b00
 `define FORWARD_MEM 2'b01
 `define FORWARD_WB  2'b10
+
+// Store Types
+`define STORE_SB  2'b00
+`define STORE_SH  2'b01
+`define STORE_SW  2'b10
+`define STORE_DEF 2'b11
+
+// Load Types
+`define LOAD_LB  3'b000
+`define LOAD_HD  3'b001
+`define LOAD_LW  3'b010
+`define LOAD_LBU 3'b011
+`define LOAD_LHU 3'b100
+`define LOAD_DEF 3'b111
+
+// Constants
+`define ZERO_32BIT  32'h00000000
+`define ZERO_12BIT  12'h000
