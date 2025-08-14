@@ -51,3 +51,9 @@
 // Constants
 `define ZERO_32BIT  32'h00000000
 `define ZERO_12BIT  12'h000
+
+// BTB State
+`define STRONG_NOT_TAKEN 2'b00
+`define WEAK_NOT_TAKEN   2'b01
+`define STRONG_TAKEN     2'b10
+`define WEAK_TAKEN       2'b11
