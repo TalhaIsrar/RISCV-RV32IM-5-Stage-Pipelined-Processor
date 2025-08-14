@@ -14,6 +14,8 @@ module id_ex_pipeline(
     input [1:0] id_mem_store_type,
     input id_wb_load,
     input id_wb_reg_file,
+    input [4:0] id_rs1,
+    input [4:0] id_rs2,
     input [4:0] id_wb_rd,
 
     output reg [31:0] ex_pc,
@@ -29,6 +31,8 @@ module id_ex_pipeline(
     output reg [1:0] ex_mem_store_type,
     output reg ex_wb_load,
     output reg ex_wb_reg_file,
+    output reg [4:0] ex_rs1,
+    output reg [4:0] ex_rs2,
     output reg [4:0] ex_wb_rd
 );
 
@@ -48,6 +52,8 @@ module id_ex_pipeline(
             ex_wb_load <= 1'b0;
             ex_wb_reg_file <= 1'b0;
             ex_wb_rd <= 5'b00000;
+            ex_rs1 <= 5'b00000;
+            ex_rs2 <= 5'b00000;
         end else begin
             ex_pc <= id_pc;
             ex_op1 <= id_op1;
@@ -63,6 +69,8 @@ module id_ex_pipeline(
             ex_wb_load <= id_wb_load;
             ex_wb_reg_file <= id_wb_reg_file;
             ex_wb_rd <= id_wb_rd;
+            ex_rs1 <= id_rs1;
+            ex_rs2 <= id_rs2;
         end
     end
 

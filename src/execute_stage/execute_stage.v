@@ -7,6 +7,12 @@ module execute_stage(
     input [2:0] func3,
     input [6:0] opcode,
     input ex_alu_src,
+
+    input [1:0] operand_a_forward_cntl,
+    input [1:0] operand_b_forward_cntl,
+    input [31:0] data_forward_mem,
+    input [31:0] data_forward_wb,
+
     output wire [31:0] result,
     output wire [31:0] op2_selected,
     output wire [31:0] pc_jump_addr,
@@ -14,11 +20,35 @@ module execute_stage(
 );
 
     wire [3:0] ALUControl;
+    reg [31:0] op1_forwarded;
+    reg [31:0] op2_forwarded;
     reg [31:0] op1_alu;
     reg [31:0] op2_alu;
 
-    assign op2_selected = op2;
+    // Mux for forwarding operand 1
+    always @(*) begin
+        case (operand_a_forward_cntl)
+            `FORWARD_ORG: op1_forwarded = op1;
+            `FORWARD_MEM: op1_forwarded = data_forward_mem;
+            `FORWARD_WB:  op1_forwarded = data_forward_wb;
+            default:      op1_forwarded = op1;
+        endcase
+    end
 
+    // Mux for forwarding operand 2
+    always @(*) begin
+        case (operand_b_forward_cntl)
+            `FORWARD_ORG: op2_forwarded = op2;
+            `FORWARD_MEM: op2_forwarded = data_forward_mem;
+            `FORWARD_WB:  op2_forwarded = data_forward_wb;
+            default:      op2_forwarded = op2;
+        endcase
+    end
+
+    // Pass op2 directly to pipeline stage in case it is used for Load instruction
+    assign op2_selected = op2_forwarded;
+
+    // Based on instruction type select data to write into rd later
     always @(*) begin
         case (opcode)
             `OPCODE_IJALR: begin
@@ -38,8 +68,8 @@ module execute_stage(
                 op2_alu = immediate;
             end
             default: begin
-                op1_alu = op1;
-                op2_alu = ex_alu_src ? immediate : op2;
+                op1_alu = op1_forwarded;
+                op2_alu = ex_alu_src ? immediate : op2_forwarded;
             end      
         endcase
     end
@@ -48,7 +78,7 @@ module execute_stage(
     pc_jump pc_jump_inst (
         .pc(pc),
         .immediate(immediate),
-        .op1(op1),
+        .op1(op1_forwarded),
         .opcode(opcode),
         .func3(func3),
         .alu_result(result),

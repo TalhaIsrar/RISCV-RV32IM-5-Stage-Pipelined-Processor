@@ -7,9 +7,11 @@ module decode_stage(
     input reg_file_wr_en,
     input [4:0] reg_file_wr_addr,
     input [31:0] reg_file_wr_data,
-
+    
     output wire [31:0] op1,
     output wire [31:0] op2,
+    output wire [4:0] rs1,
+    output wire [4:0] rs2,
     output wire [4:0] rd,
     output reg [31:0] immediate,
     output wire [6:0] opcode,
@@ -22,8 +24,6 @@ module decode_stage(
     output wire wb_load,
     output wire wb_reg_file
 );
-
-    wire [4:0] rs1, rs2;
     wire s_type;
     
     assign opcode = instruction[6:0];

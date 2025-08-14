@@ -13,6 +13,8 @@ module rv32i_core(
     wire [31:0] ex_pc;
     wire [31:0] id_op1, ex_op1;
     wire [31:0] id_op2, ex_op2;
+    wire [4:0]  id_rs1, ex_rs2;
+    wire [4:0]  id_rs2, ex_rs2;
     wire [4:0]  id_wb_rd, ex_wb_rd;
     wire [31:0] id_immediate, ex_immediate;
     wire [6:0]  id_opcode, ex_opcode;
@@ -24,6 +26,10 @@ module rv32i_core(
     wire [1:0]  id_mem_store_type, ex_mem_store_type;
     wire        id_wb_load, ex_wb_load;
     wire        id_wb_reg_file, ex_wb_reg_file;
+
+    // Forwarding Unit Connection
+    wire [1:0]  operand_a_cntl;
+    wire [1:0]  operand_b_cntl;
 
     // EX/MEM Conncetion
     wire [31:0] ex_result, mem_result;
@@ -74,6 +80,8 @@ module rv32i_core(
         .reg_file_wr_data(wb_result), // Come from WB stage
         .op1(id_op1),
         .op2(id_op2),
+        .rs1(id_rs1),
+        .rs2(id_rs2),
         .rd(id_wb_rd),
         .immediate(id_immediate),
         .opcode(id_opcode),
@@ -104,6 +112,8 @@ module rv32i_core(
         .id_mem_store_type(id_mem_store_type),
         .id_wb_load(id_wb_load),
         .id_wb_reg_file(id_wb_reg_file),
+        .id_rs1(id_rs1),
+        .id_rs2(id_rs2),
         .id_wb_rd(id_wb_rd),
 
         .ex_pc(ex_pc),
@@ -119,7 +129,21 @@ module rv32i_core(
         .ex_mem_store_type(ex_mem_store_type),
         .ex_wb_load(ex_wb_load),
         .ex_wb_reg_file(ex_wb_reg_file),
+        .ex_rs1(ex_rs1),
+        .ex_rs2(ex_rs2),
         .ex_wb_rd(ex_wb_rd)
+    );
+
+    // Instantiate the Forwading Unit module
+    forwarding_unit forwarding_unit_inst (
+        .rs1(ex_rs1),
+        .rs2(ex_rs2),
+        .rd_mem(mem_wb_rd),
+        .rd_wb(wb_rd),
+        .reg_file_wr_mem(mem_wb_reg_file),
+        .reg_file_wr_wb(wb_reg_file),
+        .operand_a_cntl(operand_a_cntl),
+        .operand_b_cntl(operand_b_cntl)
     );
 
     // Instantiate the Execute stage module
@@ -132,6 +156,10 @@ module rv32i_core(
         .func3(ex_func3),
         .opcode(ex_opcode),
         .ex_alu_src(ex_alu_src),
+        .operand_a_forward_cntl(operand_a_cntl),
+        .operand_b_forward_cntl(operand_b_cntl),
+        .data_forward_mem(mem_result),
+        .data_forward_wb(wb_result),
         .result(ex_result),
         .op2_selected(ex_op2_selected),
         .pc_jump_addr(ex_if_pc_jump_addr),

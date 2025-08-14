@@ -28,3 +28,8 @@
 `define BTYPE_BGE  3'b101
 `define BTYPE_BLTU 3'b110
 `define BTYPE_BGEU 3'b111
+
+// Forwarding Unit
+`define FORWARD_ORG 2'b00
+`define FORWARD_MEM 2'b01
+`define FORWARD_WB  2'b10
