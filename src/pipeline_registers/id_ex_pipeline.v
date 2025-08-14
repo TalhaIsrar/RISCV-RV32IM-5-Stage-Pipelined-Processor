@@ -63,7 +63,7 @@ module id_ex_pipeline(
             ex_op1 <= 32'h00000000;
             ex_op2 <= 32'h00000000;
             ex_immediate <= 32'h00000000;
-            ex_opcode <= OPCODE_ITYPE;
+            ex_opcode <= `OPCODE_ITYPE;
             ex_alu_src <= 1'b1;
             ex_func7 <= 7'b0000000;
             ex_func3 <= 3'b000;

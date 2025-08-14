@@ -8,10 +8,10 @@ module hazard_unit(
     input ex_load_inst,
     input jump_branch_taken,
 
-    output if_id_pipeline_flush,
-    output if_id_pipeline_en,
-    output id_ex_pipeline_flush,
-    output pc_en
+    output reg if_id_pipeline_flush,
+    output reg if_id_pipeline_en,
+    output reg id_ex_pipeline_flush,
+    output reg pc_en
 );
 
     wire id_rs1_used;

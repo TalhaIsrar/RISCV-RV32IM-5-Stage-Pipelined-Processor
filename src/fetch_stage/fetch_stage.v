@@ -15,7 +15,7 @@ module fetch_stage(
         .clk(clk),
         .rst(rst),
         .next_pc(next_pc),
-        .pc_en(pc_en);
+        .pc_en(pc_en),
         .pc(pc)
     );
 
