@@ -2,7 +2,7 @@
 
 module btb_read(
     input [127:0] read_set,
-    input [7:0] lru,
+    input [7:0] LRU,
     input [26:0] read_tag,
     input [2:0] read_index,
     output next_LRU_read,

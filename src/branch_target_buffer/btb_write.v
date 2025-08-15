@@ -2,7 +2,7 @@
 
 module btb_write(
     input [127:0] update_set,
-    input [7:0] lru,
+    input [7:0] LRU,
     input [26:0] update_tag,
     input [2:0] update_index,
     input [31:0] update_target,
@@ -122,8 +122,8 @@ module btb_write(
 
     // Initialize the final set which we have to replace in BTB file
     // Set is formed from concationation of all results calculated above
-    assign write_set = { write_valid1, write_tag1, write_target1, write_fsm1, 2'b00,
-                         write_valid2, write_tag2, write_target2, write_fsm2, 2'b00};
+    assign write_set = { write_valid1, write_tag1, write_target1, write_state1, 2'b00,
+                         write_valid2, write_tag2, write_target2, write_state2, 2'b00};
 
     // Calculate the next LRU value for current set
     assign next_LRU_write = new_entry_check ? (insert_branch1 ? 1'b0 : 1'b1) : current_LRU_write;

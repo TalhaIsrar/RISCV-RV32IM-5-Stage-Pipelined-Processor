@@ -3,7 +3,7 @@
 module dynamic_branch_predictor(
     input [1:0] current_state,
     input mispredicted,
-    output [1:0] next_state
+    output reg [1:0] next_state
 );
 
     // FSM implementation based on case select logic

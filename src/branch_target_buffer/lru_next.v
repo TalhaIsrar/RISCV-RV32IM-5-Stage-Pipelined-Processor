@@ -7,13 +7,13 @@ module lru_next(
     output reg [7:0] next_LRU
 );
 
-    always @* begin
-        // One-hot masks for read and write
-        reg [7:0] read_mask;
-        reg [7:0] write_mask;
-        reg [7:0] update_mask;
-        reg [7:0] update_bits;
+    // One-hot masks for read and write
+    reg [7:0] read_mask;
+    reg [7:0] write_mask;
+    reg [7:0] update_mask;
+    reg [7:0] update_bits;
 
+    always @* begin
         read_mask   = (8'b00000001 << index);
         write_mask  = (8'b00000001 << update_index);
 
@@ -25,7 +25,7 @@ module lru_next(
                     | (update_lru_write ? write_mask : 8'b00000000);
 
         // Apply updates
-        LRU_next = (LRU_prev & ~update_mask) | update_bits;
+        next_LRU = (LRU & ~update_mask) | update_bits;
     end
 
 endmodule

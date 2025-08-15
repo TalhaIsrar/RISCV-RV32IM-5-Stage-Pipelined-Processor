@@ -56,7 +56,7 @@ module btb(
 
     btb_read btb_read_inst(
         .read_set(read_set),
-        .lru(LRU),
+        .LRU(LRU),
         .read_tag(read_tag),
         .read_index(read_index),
         .next_LRU_read(next_LRU_read),
@@ -67,7 +67,7 @@ module btb(
 
     btb_write btb_write_inst(
         .update_set(read_set),
-        .lru(LRU),
+        .LRU(LRU),
         .update_tag(read_tag),
         .update_index(read_index),
         .update_target(update_target),

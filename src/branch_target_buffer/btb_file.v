@@ -13,8 +13,8 @@ module btb_file (
     reg [7:0] file [127:0];
 
     // Not practical way but here we keep
+    integer i;
     initial begin
-        integer i;
         for (i = 0; i < 8; i = i + 1)
             file[i] = 128'h0;
     end
