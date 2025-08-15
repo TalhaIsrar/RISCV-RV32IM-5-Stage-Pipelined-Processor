@@ -50,6 +50,9 @@ module btb_read(
     // Valid Signal checks if any branch has tag
     assign valid = check_branch1 || check_branch2;
 
+    // Target signals extracts value from correct branch
+    assign target = check_branch1 ? target1 : target2;
+
     // Extract the state of the read PC
     assign current_state = check_branch1 ? state1 : (
                            check_branch2 ? state2 : `STRONG_NOT_TAKEN);

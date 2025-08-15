@@ -62,7 +62,7 @@ module btb(
         .next_LRU_read(next_LRU_read),
         .valid(valid),
         .predictedTaken(predictedTaken),
-        .target(target)
+        .target(target_pc)
     );
 
     btb_write btb_write_inst(

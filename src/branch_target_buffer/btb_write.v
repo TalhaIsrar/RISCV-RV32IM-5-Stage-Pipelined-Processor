@@ -21,11 +21,9 @@ module btb_write(
     wire [1:0] state1, state2;
 
     // Final write singals to put into BTB
-    wire [63:0] write_branch1, write_branch2;
     wire write_valid1, write_valid2;
     wire [26:0] write_tag1, write_tag2;
     wire [31:0] write_target1, write_target2;
-    wire [1:0] write_state1, write_state2;
 
     // Check for each branch in set
     wire check_branch1, check_branch2;
@@ -42,7 +40,7 @@ module btb_write(
 
     // Next state of branches
     wire [1:0] next_state_branch1, next_state_branch2;
-    wire [1:0] final_state_branch1, final_state_branch2;
+    wire [1:0] write_state1, write_state2;
 
     // Set (128 bits) = Branch1 (64 bits) + Branch2(64 bits)
     // Branch (64 bits) = Valid (1 bit) + Tag (27 bits) + Target (32 bits) + State (2 bits) + N/A (2 bits)
@@ -117,8 +115,8 @@ module btb_write(
         .next_state(next_state_branch2)
     );
 
-    assign final_state_branch1 = take_branch1 ? next_state_branch1 : state1;
-    assign final_state_branch2 = take_branch2 ? next_state_branch2 : state2;
+    assign write_state1 = take_branch1 ? next_state_branch1 : state1;
+    assign write_state2 = take_branch2 ? next_state_branch2 : state2;
 
     // Initialize the final set which we have to replace in BTB file
     // Set is formed from concationation of all results calculated above
