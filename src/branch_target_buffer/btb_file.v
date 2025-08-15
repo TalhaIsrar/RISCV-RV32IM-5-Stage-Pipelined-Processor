@@ -10,7 +10,7 @@ module btb_file (
     output wire [127:0] update_set  
 );
 
-    reg [7:0] file [127:0];
+    reg [127:0] file [7:0];
 
     // Not practical way but here we keep
     integer i;

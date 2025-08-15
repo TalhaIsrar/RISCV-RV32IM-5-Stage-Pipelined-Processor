@@ -38,6 +38,54 @@ module btb_tb;
   initial begin
     // Reset
     rst = 1;
+    update = 0;
+    pc = 0;
+    update_pc = 0;
+    update_target = 0;
+    mispredicted = 0;
+    #20;
+    rst = 0;
+
+    // Example: Write first entry to BTB
+    pc = 32'h000A0000;
+    update_pc = 32'h000A0000;
+    update_target = 32'h000A0020;
+    update = 1;
+    mispredicted = 0;
+    #10;
+    update = 0;
+
+    // Check that BTB predicts correctly
+    pc = 32'h000A0000;
+    #10;
+    $display("Valid: %b, Target: %h, PredTaken: %b", valid, target_pc, predictedTaken);
+
+    // Add second entry
+    pc = 32'h000B0000;
+    update_pc = 32'h000B0000;
+    update_target = 32'h000B0020;
+    update = 1;
+    #10;
+    update = 0;
+
+    // Check first and second entry
+    pc = 32'h000A0000;
+    #10;
+    $display("Entry 0 - Valid: %b, Target: %h", valid, target_pc);
+
+    pc = 32'h000B0000;
+    #10;
+    $display("Entry 1 - Valid: %b, Target: %h", valid, target_pc);
+
+    // Test misprediction
+    pc = 32'h000A0000;
+    mispredicted = 1;
+    update = 1;
+    #10;
+    update = 0;
+    mispredicted = 0;
+    #10;
+    $display("After mispredict - Valid: %b, Target: %h, PredTaken: %b", valid, target_pc, predictedTaken);
 
     // Finish simulation
     #50;
