@@ -1,7 +1,10 @@
+`include "../defines.vh"
+
 module btb_read(
     input [127:0] read_set,
     input [7:0] lru,
     input [26:0] read_tag,
+    input [2:0] read_index,
     output next_LRU_read,
     output valid,
     output predictedTaken,
@@ -57,7 +60,7 @@ module btb_read(
     assign predictedTaken = current_state[1];
 
     // Calculate the next LRU value for current set
-    assign current_LRU_read = LRU[index];
+    assign current_LRU_read = LRU[read_index];
     assign next_LRU_read = check_branch1 ? 1'b0 : (
                            check_branch2 ? 1'b1 : current_LRU_read);
 
