@@ -1,48 +1,42 @@
+.text
+.globl _start
+
+_start:
+    li x1, 0          # loop counter i = 0
+    li x2, 10         # loop limit = 10
+    li x3, 0          # sum = 0
+    
     # Initialize registers
-    addi x1, x0, 5        
-    addi x2, x0, 3        
-    addi x3, x0, 2        
-    addi x4, x0, 1    
-    addi x10, x0, 1023    
+    addi x4, x0, 0
+    addi x6, x0, 0
+    addi x7, x0, 0
+    addi x8, x0, 8    # Run 8 times
 
-    # R-type computations
-    add x5, x1, x2        
-    sub x6, x1, x3        
-    and x7, x2, x4        
+loop:
+    addi x1, x1, 1    # i = i + 1
+    add  x3, x3, x1   # sum += i
 
-    # Store/load
-    sw x1, 0(x5)
-    lw x8, 0(x5)          
+    blt  x1, x2, loop # branch back until i < 10  (taken 9 times, not taken once)
 
-    addi x9, x8, 10 # Check for internal stall here 
+    # Now test alternating branch
+    li x4, 0
 
-    sb x10, 4(x5)
-    lb x11, 4(x5) 
+alt_loop:
+    addi x4, x4, 1
+    andi x5, x4, 1
+    beq  x5, x0, even # branch taken on even iterations
+    j    odd
 
-    # Branch instructions
-    beq x1, x2, skip1     
-    addi x12, x0, 1       
+even:
+    addi x6, x6, 1    # count evens
+    j    cont
 
-skip1:
-    bne x1, x2, taken1    
-    addi x13, x0, 2       
+odd:
+    addi x7, x7, 1    # count odds
 
-taken1:
-    addi x14, x0, 3       
+cont:
+    blt  x4, x8, alt_loop   # repeat alternating branch 8 times
 
-    # JAL instruction
-    jal x15, jump_label
-    addi x16, x0, 4       
-
-jump_label:
-    addi x17, x0, 5       
-
-    # JALR instruction
-    addi x18, x0, 10 
-
-    # LUI instruction
-    lui x20, 0x12345       # x20 = 0x12345000
-
-    # AUIPC instruction
-    auipc x21, 0x10        # x21 = PC + 0x10000
-    jalr x19, x18, 0
+done:   
+    nop
+    nop
