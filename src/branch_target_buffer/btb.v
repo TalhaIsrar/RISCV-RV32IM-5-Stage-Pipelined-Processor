@@ -29,6 +29,17 @@ module btb(
     wire next_LRU_read;
     wire next_LRU_write;
 
+    // Added a cycle delay in update signal
+    reg reg_file_write;
+
+    always @(posedge clk or posedge rst) begin
+        if (rst)
+            reg_file_write <= 0;
+        else
+            reg_file_write <= update;  // delayed by 1 cycle
+    end
+
+
     // PC (32 bits) = Tag (27 bits) + Index (3 bits) + Byte offset (2 bits)
     assign read_index = pc[4:2];
     assign read_tag = pc[31:5];
@@ -49,7 +60,7 @@ module btb(
         .update_index(update_index),
         .write_index(update_index),
         .write_set(write_set),
-        .write_en(update),
+        .write_en(reg_file_write),
         .read_set(read_set),
         .update_set(update_set)
     );
@@ -66,7 +77,7 @@ module btb(
     );
 
     btb_write btb_write_inst(
-        .update_set(read_set),
+        .update_set(update_set),
         .LRU(LRU),
         .update_tag(read_tag),
         .update_index(read_index),

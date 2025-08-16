@@ -82,7 +82,7 @@ module btb_write(
     // Check if branch1 or branch2 is being updated or replaced 
     // Only 1 of these will be 1
     assign take_branch1 = check_branch1 || insert_branch1;
-    assign take_branch2 = check_branch2 || !(insert_branch1);
+    assign take_branch2 = check_branch2 || !(insert_branch2);
 
     // Valid remain 1 if it was 1 and if new value is being inserted
     assign write_valid1 = valid1 || take_branch1;
