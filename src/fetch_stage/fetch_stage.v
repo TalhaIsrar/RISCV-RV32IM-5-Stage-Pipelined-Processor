@@ -5,6 +5,9 @@ module fetch_stage(
     input flush,
     input [31:0] pc_jump_addr,
     input jump_en,
+    input [31:0] btb_target_pc,
+    input btb_pc_valid,
+    input btb_pc_predictTaken,
     output [31:0] instruction,
     output [31:0] pc
 );

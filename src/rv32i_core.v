@@ -6,6 +6,11 @@ module rv32i_core(
     wire [31:0] ex_if_pc_jump_addr;
     wire ex_jump_en;
 
+    // Branch Target Buffer Signals
+    wire btb_target_pc;
+    wire btb_pc_valid;
+    wire btb_pc_predictTaken;
+
     // Hazard Unit Signals
     wire pc_en;
     wire if_id_pipeline_flush;
@@ -65,8 +70,25 @@ module rv32i_core(
         .flush(if_id_pipeline_flush),
         .pc_jump_addr(ex_if_pc_jump_addr),
         .jump_en(ex_if_jump_en),
+        .btb_target_pc(btb_target_pc),
+        .btb_pc_valid(btb_pc_valid), // Replace this by 1'b0 to disconnect BTB
+        .btb_pc_predictTaken(btb_pc_predictTaken),
         .instruction(if_instruction),
         .pc(if_pc)
+    );
+
+    // Instantiate the Branch Target Buffer module
+    btb btb_inst (
+        .clk(clk),
+        .rst(rst),
+        .pc(if_pc),
+        .update_pc(),
+        .update(),
+        .update_target(),
+        .mispredicted(),
+        .target_pc(btb_target_pc),
+        .valid(btb_pc_valid),
+        .predictedTaken(btb_pc_predictTaken)
     );
 
     // Instantiate the IF/ID pipeline module
