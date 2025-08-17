@@ -101,7 +101,7 @@ module btb_write(
     // FSM will decide on base of old value and mispredicted, the new prediction for the address
     // FSM is using dynamic 2 bit predictor
     assign current_state_branch1 =  insert_branch1 ? `STRONG_NOT_TAKEN : state1;
-    assign current_state_branch2 =  insert_branch2 ? `STRONG_NOT_TAKEN : state1;
+    assign current_state_branch2 =  !(insert_branch2) ? `STRONG_NOT_TAKEN : state2;
 
     dynamic_branch_predictor fsm_branch1(
         .current_state(current_state_branch1),

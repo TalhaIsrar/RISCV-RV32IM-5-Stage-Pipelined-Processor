@@ -18,7 +18,7 @@ module if_id_pipeline(
             id_pred_taken <= 1'b0;
         end else if (pipeline_flush) begin
             id_pc <= id_pc;
-            id_pred_taken <= id_pred_taken;
+            id_pred_taken <= 1'b0;
         end else if (pipeline_en) begin
             id_pc <= if_pc;
             id_pred_taken <= if_pred_taken;    

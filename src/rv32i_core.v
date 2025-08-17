@@ -76,7 +76,7 @@ module rv32i_core(
         .jump_en(ex_if_jump_en),
         .btb_target_pc(btb_target_pc),
         .btb_pc_valid(btb_pc_valid), // Replace this by 1'b0 to disconnect BTB
-        .btb_pc_predictTaken(btb_pc_predictTaken),
+        .btb_pc_predictTaken(btb_pc_predictTaken), // Replace this by 1'b0 to disconnect BTB
         .instruction(if_instruction),
         .pc(if_pc)
     );
@@ -87,7 +87,7 @@ module rv32i_core(
         .rst(rst),
         .pc(if_pc),
         .update_pc(ex_pc),
-        .update(btb_update),
+        .update(btb_update), // Replace this by 1'b0 to disconnect BTB
         .update_target(btb_update_target),
         .mispredicted(ex_if_jump_en),
         .target_pc(btb_target_pc),

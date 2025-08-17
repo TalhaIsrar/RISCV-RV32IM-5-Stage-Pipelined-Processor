@@ -18,9 +18,6 @@ loop:
 
     blt  x1, x2, loop # branch back until i < 10  (taken 9 times, not taken once)
 
-    # Now test alternating branch
-    li x4, 0
-
 alt_loop:
     addi x4, x4, 1
     andi x5, x4, 1

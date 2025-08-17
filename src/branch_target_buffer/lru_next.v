@@ -3,6 +3,8 @@ module lru_next(
     input [2:0] update_index,
     input update_lru_read,
     input update_lru_write,
+    input valid,
+    input update,
     input [7:0] LRU,
     output reg [7:0] next_LRU
 );
@@ -21,8 +23,8 @@ module lru_next(
         update_mask = read_mask | write_mask;
 
         // Build the new values to set
-        update_bits = (update_lru_read  ? read_mask  : 8'b00000000)
-                    | (update_lru_write ? write_mask : 8'b00000000);
+        update_bits = (update_lru_read  && valid  ? read_mask  : 8'b00000000)
+                    | (update_lru_write && update ? write_mask : 8'b00000000);
 
         // Apply updates
         next_LRU = (LRU & ~update_mask) | update_bits;

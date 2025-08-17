@@ -31,12 +31,19 @@ module btb(
 
     // Added a cycle delay in update signal
     reg reg_file_write;
+    reg [127:0] reg_write_set;
+    reg [2:0] reg_write_index;
 
     always @(posedge clk or posedge rst) begin
-        if (rst)
+        if (rst) begin
             reg_file_write <= 0;
-        else
+            reg_write_set <= 0;
+            reg_write_index <= 0;
+        end else begin
             reg_file_write <= update;  // delayed by 1 cycle
+            reg_write_set <= write_set;
+            reg_write_index <= update_index;
+        end
     end
 
 
@@ -58,8 +65,8 @@ module btb(
         .clk(clk),
         .read_index(read_index),
         .update_index(update_index),
-        .write_index(update_index),
-        .write_set(write_set),
+        .write_index(reg_write_index),
+        .write_set(reg_write_set),
         .write_en(reg_file_write),
         .read_set(read_set),
         .update_set(update_set)
@@ -79,8 +86,8 @@ module btb(
     btb_write btb_write_inst(
         .update_set(update_set),
         .LRU(LRU),
-        .update_tag(read_tag),
-        .update_index(read_index),
+        .update_tag(update_tag),
+        .update_index(update_index),
         .update_target(update_target),
         .mispredicted(mispredicted),
         .write_set(write_set),
@@ -92,6 +99,8 @@ module btb(
         .update_index(update_index),
         .update_lru_read(next_LRU_read),
         .update_lru_write(next_LRU_write),
+        .valid(valid),
+        .update(update),
         .LRU(LRU),
         .next_LRU(next_LRU)
     );

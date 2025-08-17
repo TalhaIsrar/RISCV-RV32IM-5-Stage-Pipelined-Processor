@@ -14,7 +14,6 @@ module pc_jump(
     output update_btb
 );
     wire [31:0] input_a, input_b;
-    wire [31:0] final_input_a, final_input_b;
     wire jump_inst, branch_inst;
     reg jump_en;
 
