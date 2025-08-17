@@ -1,15 +1,18 @@
 module rv32i_core(
     input clk,
-    input rst
+    input rst,
+    output [31:0] wb_result
 );
     // EX/IF Signals
     wire [31:0] ex_if_pc_jump_addr;
     wire ex_jump_en;
 
     // Branch Target Buffer Signals
-    wire btb_target_pc;
+    wire [31:0] btb_target_pc;
     wire btb_pc_valid;
     wire btb_pc_predictTaken;
+    wire btb_update;
+    wire [31:0] btb_update_target;
 
     // Hazard Unit Signals
     wire pc_en;
@@ -38,6 +41,7 @@ module rv32i_core(
     wire [1:0]  id_mem_store_type, ex_mem_store_type;
     wire        id_wb_load, ex_wb_load;
     wire        id_wb_reg_file, ex_wb_reg_file;
+    wire        id_pred_taken, ex_pred_taken;
 
     // Forwarding Unit Connection
     wire [1:0]  operand_a_cntl;
@@ -82,10 +86,10 @@ module rv32i_core(
         .clk(clk),
         .rst(rst),
         .pc(if_pc),
-        .update_pc(32'h00000000),
-        .update(1'b0),
-        .update_target(32'h00000000),
-        .mispredicted(1'b0),
+        .update_pc(ex_pc),
+        .update(btb_update),
+        .update_target(btb_update_target),
+        .mispredicted(ex_if_jump_en),
         .target_pc(btb_target_pc),
         .valid(btb_pc_valid),
         .predictedTaken(btb_pc_predictTaken)
@@ -99,8 +103,10 @@ module rv32i_core(
         .pipeline_en(if_id_pipeline_en),
         .if_pc(if_pc),
         .if_instruction(if_instruction),
+        .if_pred_taken(btb_pc_predictTaken),
         .id_pc(id_pc),
-        .id_instruction(id_instruction)
+        .id_instruction(id_instruction),
+        .id_pred_taken(id_pred_taken)
     );
 
     // Instantiate the Decode stage module
@@ -149,6 +155,7 @@ module rv32i_core(
         .id_rs1(id_rs1),
         .id_rs2(id_rs2),
         .id_wb_rd(id_wb_rd),
+        .id_pred_taken(id_pred_taken),
 
         .ex_pc(ex_pc),
         .ex_op1(ex_op1),
@@ -165,7 +172,8 @@ module rv32i_core(
         .ex_wb_reg_file(ex_wb_reg_file),
         .ex_rs1(ex_rs1),
         .ex_rs2(ex_rs2),
-        .ex_wb_rd(ex_wb_rd)
+        .ex_wb_rd(ex_wb_rd),
+        .ex_pred_taken(ex_pred_taken)
     );
 
     // Instantiate the Forwading Unit module
@@ -190,6 +198,7 @@ module rv32i_core(
         .func3(ex_func3),
         .opcode(ex_opcode),
         .ex_alu_src(ex_alu_src),
+        .predictedTaken(ex_pred_taken),
         .operand_a_forward_cntl(operand_a_cntl),
         .operand_b_forward_cntl(operand_b_cntl),
         .data_forward_mem(mem_result),
@@ -197,7 +206,9 @@ module rv32i_core(
         .result(ex_result),
         .op2_selected(ex_op2_selected),
         .pc_jump_addr(ex_if_pc_jump_addr),
-        .jump_en(ex_if_jump_en)
+        .jump_en(ex_if_jump_en),
+        .update_btb(btb_update),
+        .calc_jump_addr(btb_update_target)
     );
 
     // Instantiate the Hazard Unit module

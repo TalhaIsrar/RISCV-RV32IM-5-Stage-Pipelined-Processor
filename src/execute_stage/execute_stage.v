@@ -7,6 +7,7 @@ module execute_stage(
     input [2:0] func3,
     input [6:0] opcode,
     input ex_alu_src,
+    input predictedTaken,
 
     input [1:0] operand_a_forward_cntl,
     input [1:0] operand_b_forward_cntl,
@@ -16,7 +17,9 @@ module execute_stage(
     output wire [31:0] result,
     output wire [31:0] op2_selected,
     output wire [31:0] pc_jump_addr,
-    output wire jump_en
+    output wire jump_en,
+    output wire update_btb,
+    output wire [31:0] calc_jump_addr
 );
 
     wire [3:0] ALUControl;
@@ -82,8 +85,11 @@ module execute_stage(
         .opcode(opcode),
         .func3(func3),
         .alu_result(result),
+        .predictedTaken(predictedTaken),
         .update_pc(pc_jump_addr),
-        .modify_pc(jump_en)
+        .jump_addr(calc_jump_addr),
+        .modify_pc(jump_en),
+        .update_btb(update_btb)
     );
 
     // Instantiate the ALU Controller
