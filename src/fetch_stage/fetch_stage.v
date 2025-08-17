@@ -27,6 +27,9 @@ module fetch_stage(
     pc_update pc_update_inst (
         .pc(pc),
         .pc_jump_addr(pc_jump_addr),
+        .btb_target_pc(btb_target_pc),
+        .btb_pc_valid(btb_pc_valid),
+        .btb_pc_predictTaken(btb_pc_predictTaken),
         .jump_en(jump_en),
         .next_pc(next_pc)
     );
