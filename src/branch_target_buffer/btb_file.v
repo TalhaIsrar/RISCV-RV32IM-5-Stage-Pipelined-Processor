@@ -27,6 +27,9 @@ module btb_file (
 
     // Read operation
     assign update_set = file[update_index];
+
+    // In case read and write are to same address (when write enable = 1):
+    // Forward write value to read set directly to save 1 cycle
     assign read_set = ((read_index == write_index) && write_en) ? write_set : file[read_index];
 
 endmodule

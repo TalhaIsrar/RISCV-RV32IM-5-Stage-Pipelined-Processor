@@ -6,6 +6,7 @@ module pc(
     output reg [31:0] pc
 );
 
+    // Next PC Register
     always @(posedge clk or posedge rst) begin
         if (rst) begin
             pc <= 32'h00000000; // Reset PC to 0

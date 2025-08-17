@@ -8,7 +8,7 @@ module instruction_mem(
 );
 
     // Memory array to hold instructions
-    reg [31:0] mem [0:1023]; // 4KB memory
+    reg [31:0] mem [0:255]; // 1KB memory
 
     // Initialize memory using file
     initial begin
