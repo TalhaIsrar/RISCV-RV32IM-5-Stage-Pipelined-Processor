@@ -24,8 +24,8 @@ module decode_stage(
     output wire wb_load,
     output wire wb_reg_file
 );
-    wire s_type;
-    
+    wire invalid_inst;
+
     assign opcode = instruction[6:0];
     assign rd = instruction[11:7];
     assign rs1 = instruction[19:15];
@@ -55,12 +55,12 @@ module decode_stage(
         .opcode(opcode),
         .func3(func3),
         .ex_alu_src(alu_src),
-        .s_type(s_type),
         .mem_write(mem_write),
         .mem_load_type(mem_load_type),
         .mem_store_type(mem_store_type),
         .wb_load(wb_load),
-        .wb_reg_file(wb_reg_file)
+        .wb_reg_file(wb_reg_file),
+        .invalid_inst(invalid_inst)
     );
 
     // Instantiate the register file module

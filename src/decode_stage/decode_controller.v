@@ -4,12 +4,12 @@ module decode_controller (
     input [6:0] opcode,
     input [2:0] func3,
     output ex_alu_src,
-    output s_type, // REMOVE LATER
     output mem_write,
     output reg [2:0] mem_load_type,
     output reg [1:0] mem_store_type,
     output wb_load,
-    output wb_reg_file
+    output wb_reg_file,
+    output invalid_inst,
 );
 
     assign ex_alu_src  = (opcode == `OPCODE_ITYPE ||
@@ -30,7 +30,7 @@ module decode_controller (
                          opcode == `OPCODE_AUIPC ||
                          opcode == `OPCODE_JTYPE);
                          
-    assign s_type = opcode == `OPCODE_STYPE;
+    assign invalid_inst = wb_reg_file || (opcode == `OPCODE_BTYPE) || mem_write;
 
     always @(*) begin
         mem_store_type = `STORE_DEF; // Disable writing
