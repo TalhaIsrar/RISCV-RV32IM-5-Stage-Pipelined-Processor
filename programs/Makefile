@@ -17,7 +17,7 @@ all: $(HEX) dump
 
 # Compile assembly to ELF (RV32I, no standard libs, start at 0x0)
 $(ELF): $(SRC)
-	$(CC) -march=rv32i -mabi=ilp32 -nostdlib -Ttext=0x0 -o $@ $<
+	$(CC) -march=rv32im -mabi=ilp32 -nostdlib -Ttext=0x0 -o $@ $<
 
 # Convert ELF to raw binary
 $(BIN): $(ELF)

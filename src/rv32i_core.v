@@ -19,6 +19,7 @@ module rv32i_core(
     wire if_id_pipeline_flush;
     wire if_id_pipeline_en;
     wire id_ex_pipeline_flush;
+    wire invalid_inst;
 
     // IF/ID Connection
     wire [31:0] if_instruction, id_instruction;
@@ -125,6 +126,7 @@ module rv32i_core(
         .immediate(id_immediate),
         .opcode(id_opcode),
         .alu_src(id_alu_src),
+        .invalid_inst(invalid_inst),
         .func7(id_func7),
         .func3(id_func3),
         .mem_write(id_mem_write),
@@ -219,6 +221,7 @@ module rv32i_core(
         .ex_rd(ex_wb_rd),
         .ex_load_inst(ex_wb_load),
         .jump_branch_taken(ex_if_jump_en),
+        .invalid_inst(invalid_inst),
         .if_id_pipeline_flush(if_id_pipeline_flush),
         .if_id_pipeline_en(if_id_pipeline_en),
         .id_ex_pipeline_flush(id_ex_pipeline_flush),

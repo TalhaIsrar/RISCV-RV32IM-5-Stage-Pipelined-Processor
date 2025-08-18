@@ -12,6 +12,8 @@ _start:
     addi x7, x0, 0
     addi x8, x0, 8    # Run 8 times
 
+    mul x11, x2, x8
+
 loop:
     addi x1, x1, 1    # i = i + 1
     add  x3, x3, x1   # sum += i
@@ -35,5 +37,6 @@ cont:
     blt  x4, x8, alt_loop   # repeat alternating branch 8 times
 
 done:   
+    mul x11, x2, x8
     nop
     nop
