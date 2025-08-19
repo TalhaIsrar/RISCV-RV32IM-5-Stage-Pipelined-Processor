@@ -1,7 +1,9 @@
 module rv32i_core(
     input clk,
     input rst,
-    output [31:0] wb_result
+    output [31:0] wb_result,
+    output [31:0] ex_result,
+    output pc_en
 );
     // EX/IF Signals
     wire [31:0] ex_if_pc_jump_addr;
