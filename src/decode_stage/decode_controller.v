@@ -16,7 +16,7 @@ module decode_controller (
     wire i_type_inst;
 
     assign r_type_inst = (opcode == `OPCODE_RTYPE && (func7 == `FUNC7_ADD || func7 == `FUNC7_SUB));
-    assign i_type_inst = (opcode == `OPCODE_ITYPE && (func7 == `FUNC7_ADD || func7 == `FUNC7_SUB));
+    assign i_type_inst = (opcode == `OPCODE_ITYPE);
 
     assign ex_alu_src  = (opcode == `OPCODE_ITYPE ||
                          opcode == `OPCODE_ILOAD ||
