@@ -3,7 +3,8 @@
 module decode_stage(
     input clk,
     input rst,
-    input [31:0] instruction,
+    input id_flush,
+    input [31:0] instruction_in,
     input reg_file_wr_en,
     input [4:0] reg_file_wr_addr,
     input [31:0] reg_file_wr_data,
@@ -25,6 +26,10 @@ module decode_stage(
     output wire wb_load,
     output wire wb_reg_file
 );
+    wire [31:0] instruction;
+
+    assign instruction = id_flush ? 32'h00000013 : instruction_in;
+
     assign opcode = instruction[6:0];
     assign rd = instruction[11:7];
     assign rs1 = instruction[19:15];

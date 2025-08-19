@@ -24,6 +24,7 @@ module rv32i_core(
     // IF/ID Connection
     wire [31:0] if_instruction, id_instruction;
     wire [31:0] if_pc, id_pc;
+    wire id_flush;
 
     // ID/EX Connection
     wire [31:0] ex_pc;
@@ -102,9 +103,11 @@ module rv32i_core(
         .rst(rst),
         .pipeline_flush(if_id_pipeline_flush),
         .pipeline_en(if_id_pipeline_en),
+        .if_flush(if_id_pipeline_flush),
         .if_pc(if_pc),
         .if_instruction(if_instruction),
         .if_pred_taken(btb_pc_predictTaken),
+        .id_flush(id_flush),
         .id_pc(id_pc),
         .id_instruction(id_instruction),
         .id_pred_taken(id_pred_taken)
@@ -114,7 +117,8 @@ module rv32i_core(
     decode_stage decode_stage_inst (
         .clk(clk),
         .rst(rst),
-        .instruction(id_instruction),
+        .id_flush(id_flush),
+        .instruction_in(id_instruction),
         .reg_file_wr_en(wb_reg_file),   // Come from WB stage
         .reg_file_wr_addr(wb_rd), // Come from WB stage
         .reg_file_wr_data(wb_result), // Come from WB stage

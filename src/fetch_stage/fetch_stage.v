@@ -39,8 +39,11 @@ module fetch_stage(
         .clk(clk),
         .rst(rst),
         .pc(pc),
-        .flush(flush),
         .read_en(pc_en),
+        .write_en(1'b0),
+        .flush(flush),
+        .write_addr(8'hff),
+        .write_data(32'h00000000),
         .instruction(instruction)
     );
 
