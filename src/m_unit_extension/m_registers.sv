@@ -37,7 +37,7 @@ logic signed [32:0] next_mult_a, next_mult_b; // operands of multiplication
 // All registers are updated
 always_ff @(posedge clk) // Synchronous reset, match registers inside DSP
 begin
-    if(~resetn)
+    if(resetn)
     begin
         R <= '0;
         D <= '0;

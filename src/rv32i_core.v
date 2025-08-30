@@ -28,6 +28,12 @@ module rv32i_core(
     wire [31:0] if_pc, id_pc;
     wire id_flush;
 
+    // M Unit Connection
+    wire m_unit_ready;
+    wire m_unit_wr;
+    wire [31:0] m_unit_result;
+    wire m_unit_busy;
+
     // ID/EX Connection
     wire [31:0] ex_pc;
     wire [31:0] id_op1, ex_op1;
@@ -140,6 +146,20 @@ module rv32i_core(
         .mem_store_type(id_mem_store_type),
         .wb_load(id_wb_load),
         .wb_reg_file(id_wb_reg_file)
+    );
+
+    // Instantiate the M Unit
+    riscv_m_unit riscv_m_unit_inst(
+        .clk(clk),
+        .resetn(rst),
+        .valid(invalid_inst),
+        .instruction(id_instruction),
+        .rs1(id_op1),
+        .rs2(id_op2),
+        .wr(m_unit_wr),
+        .result(m_unit_result),
+        .busy(m_unit_busy),
+        .ready(m_unit_ready)
     );
 
     // Instantiate the ID/EX pipeline module

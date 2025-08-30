@@ -10,9 +10,10 @@ module riscv_m_unit(
 	input logic[31:0] rs2,
 
 	output logic wr,
-	output logic[31:0] rd,
+	output logic[31:0] result,
 	output logic busy,
-	output logic ready
+	output logic ready,
+    output logic[4:0] result_dest
 	);
 
 //// DATA SIGNALS
@@ -74,13 +75,13 @@ m_alu alu(
 always_comb begin
     // MUX output selection
     unique case (mux_out)
-        `MUX_OUT_ZERO:        rd = '0;
-        `MUX_OUT_DIV_REM:     rd = div_rem;
-        `MUX_OUT_DIV_REM_NEG: rd = div_rem_neg;
-        `MUX_OUT_MULT_LOWER:  rd = product[31:0];
-        `MUX_OUT_MULT_UPPER:  rd = product[63:32];
-        `MUX_OUT_ALL1:        rd = {32{1'b1}};
-        `MUX_OUT_MINUS_1:     rd = -32'd1;
+        `MUX_OUT_ZERO:        result = '0;
+        `MUX_OUT_DIV_REM:     result = div_rem;
+        `MUX_OUT_DIV_REM_NEG: result = div_rem_neg;
+        `MUX_OUT_MULT_LOWER:  result = product[31:0];
+        `MUX_OUT_MULT_UPPER:  result = product[63:32];
+        `MUX_OUT_ALL1:        result = {32{1'b1}};
+        `MUX_OUT_MINUS_1:     result = -32'd1;
     endcase
 end
 

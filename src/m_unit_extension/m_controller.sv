@@ -66,9 +66,9 @@ end
 
 
 // SEQUENTIAL BLOCK
-always_ff @(posedge clk, negedge resetn) // Asynchronous reset
+always_ff @(posedge clk, posedge resetn) // reset
 begin
-    if(~resetn) begin
+    if(resetn) begin
         state <= IDLE;
         counter <= 5'b00000;
         current_func <= '0;
