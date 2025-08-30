@@ -29,6 +29,9 @@ module rv32i_core(
     wire id_flush;
 
     // M Unit Connection
+    wire [31:0] m_unit_op1;
+    wire [31:0] m_unit_instruction;
+    wire m_unit_invalid_inst;
     wire m_unit_ready;
     wire m_unit_wr;
     wire [31:0] m_unit_result;
@@ -148,25 +151,13 @@ module rv32i_core(
         .wb_reg_file(id_wb_reg_file)
     );
 
-    // Instantiate the M Unit
-    riscv_m_unit riscv_m_unit_inst(
-        .clk(clk),
-        .resetn(rst),
-        .valid(invalid_inst && !ex_if_jump_en),
-        .instruction(id_instruction),
-        .rs1(id_op1),
-        .rs2(id_op2),
-        .wr(m_unit_wr),
-        .result(m_unit_result),
-        .busy(m_unit_busy),
-        .ready(m_unit_ready)
-    );
-
     // Instantiate the ID/EX pipeline module
     id_ex_pipeline id_ex_pipeline_inst (
         .clk(clk),
         .rst(rst),
         .pipeline_flush(id_ex_pipeline_flush),
+        .id_invalid_inst(invalid_inst && !ex_if_jump_en),
+        .id_instruction(id_instruction),
         .id_pc(id_pc),
         .id_op1(id_op1),
         .id_op2(id_op2),
@@ -185,6 +176,8 @@ module rv32i_core(
         .id_wb_rd(id_wb_rd),
         .id_pred_taken(id_pred_taken),
 
+        .ex_invalid_inst(m_unit_invalid_inst),
+        .ex_instruction(m_unit_instruction),
         .ex_pc(ex_pc),
         .ex_op1(ex_op1),
         .ex_op2(ex_op2),
@@ -202,6 +195,20 @@ module rv32i_core(
         .ex_rs2(ex_rs2),
         .ex_wb_rd(ex_wb_rd),
         .ex_pred_taken(ex_pred_taken)
+    );
+
+    // Instantiate the M Unit
+    riscv_m_unit riscv_m_unit_inst(
+        .clk(clk),
+        .resetn(rst),
+        .valid(m_unit_invalid_inst),
+        .instruction(m_unit_instruction),
+        .rs1(m_unit_op1),
+        .rs2(ex_op2_selected),
+        .wr(),
+        .result(),
+        .busy(),
+        .ready()
     );
 
     // Instantiate the Forwading Unit module
@@ -227,11 +234,13 @@ module rv32i_core(
         .opcode(ex_opcode),
         .ex_alu_src(ex_alu_src),
         .predictedTaken(ex_pred_taken),
+        .invalid_inst(m_unit_invalid_inst),
         .operand_a_forward_cntl(operand_a_cntl),
         .operand_b_forward_cntl(operand_b_cntl),
         .data_forward_mem(mem_result),
         .data_forward_wb(wb_result),
         .result(ex_result),
+        .op1_selected(m_unit_op1),
         .op2_selected(ex_op2_selected),
         .pc_jump_addr(ex_if_pc_jump_addr),
         .jump_en(ex_if_jump_en),

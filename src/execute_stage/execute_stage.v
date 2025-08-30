@@ -8,13 +8,15 @@ module execute_stage(
     input [6:0] opcode,
     input ex_alu_src,
     input predictedTaken,
-
+    input invalid_inst,
+    
     input [1:0] operand_a_forward_cntl,
     input [1:0] operand_b_forward_cntl,
     input [31:0] data_forward_mem,
     input [31:0] data_forward_wb,
 
     output wire [31:0] result,
+    output wire [31:0] op1_selected,
     output wire [31:0] op2_selected,
     output wire [31:0] pc_jump_addr,
     output wire jump_en,
@@ -49,7 +51,9 @@ module execute_stage(
     end
 
     // Pass op2 directly to pipeline stage in case it is used for Load instruction
+    // Forwarded outputs are also used in the M unit to avoid data hazards
     assign op2_selected = op2_forwarded;
+    assign op1_selected = op1_forwarded;
 
     // Based on instruction type select data to write into rd later
     always @(*) begin
@@ -71,11 +75,12 @@ module execute_stage(
                 op2_alu = immediate;
             end
             default: begin
-                op1_alu = op1_forwarded;
+                op1_alu = invalid_inst ? 0 : op1_forwarded;
                 op2_alu = ex_alu_src ? immediate : op2_forwarded;
             end      
         endcase
     end
+    
 
     // Instantiate the PC Jump Module
     pc_jump pc_jump_inst (

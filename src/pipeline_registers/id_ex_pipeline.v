@@ -5,6 +5,8 @@ module id_ex_pipeline(
     input rst,
     input pipeline_flush,
 
+    input id_invalid_inst,
+    input [31:0] id_instruction,
     input [31:0] id_pc,
     input [31:0] id_op1,
     input [31:0] id_op2,
@@ -23,6 +25,8 @@ module id_ex_pipeline(
     input [4:0] id_wb_rd,
     input id_pred_taken,
 
+    output reg ex_invalid_inst,
+    output reg [31:0] ex_instruction,
     output reg [31:0] ex_pc,
     output reg [31:0] ex_op1,
     output reg [31:0] ex_op2,
@@ -39,12 +43,13 @@ module id_ex_pipeline(
     output reg [4:0] ex_rs1,
     output reg [4:0] ex_rs2,
     output reg [4:0] ex_wb_rd,
-    output reg ex_pred_taken,
-    output reg ex_invalid_inst
+    output reg ex_pred_taken
 );
 
     always @(posedge clk or posedge rst) begin
         if (rst) begin
+            ex_invalid_inst <= 1'b0;
+            ex_instruction <= 32'h00000000;
             ex_pc <= 32'h00000000;
             ex_op1 <= 32'h00000000;
             ex_op2 <= 32'h00000000;
@@ -63,9 +68,11 @@ module id_ex_pipeline(
             ex_rs2 <= 5'b00000;
             ex_pred_taken <= 1'b0;
         end else if (pipeline_flush) begin
+            ex_invalid_inst <= id_invalid_inst;
+            ex_instruction <= id_instruction;
             ex_pc <= ex_pc;
-            ex_op1 <= 32'h00000000;
-            ex_op2 <= 32'h00000000;
+            ex_op1 <= id_op1;
+            ex_op2 <= id_op2;
             ex_immediate <= 32'h00000000;
             ex_opcode <= `OPCODE_ITYPE;
             ex_alu_src <= 1'b1;
@@ -76,11 +83,13 @@ module id_ex_pipeline(
             ex_mem_store_type <= 2'b00;
             ex_wb_load <= 1'b0;
             ex_wb_reg_file <= 1'b0;
-            ex_wb_rd <= 5'b00000;
-            ex_rs1 <= 5'b00000;
-            ex_rs2 <= 5'b00000;
+            ex_wb_rd <= id_wb_rd;
+            ex_rs1 <= id_rs1;
+            ex_rs2 <= id_rs2;
             ex_pred_taken <= 1'b0;
         end else begin
+            ex_invalid_inst <= id_invalid_inst;
+            ex_instruction <= id_instruction;
             ex_pc <= id_pc;
             ex_op1 <= id_op1;
             ex_op2 <= id_op2;
