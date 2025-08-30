@@ -12,7 +12,7 @@ _start:
     addi x7, x0, 0
     addi x8, x0, 8    # Run 8 times
 
-    mul x11, x2, x8
+    mul x9, x2, x8
 
 loop:
     addi x1, x1, 1    # i = i + 1
@@ -37,6 +37,15 @@ cont:
     blt  x4, x8, alt_loop   # repeat alternating branch 8 times
 
 done:   
-    mul x11, x2, x8
+    mul x10, x7, x3
     nop
     nop
+
+    addi x5, x0, 8
+
+    # Store/load
+    sw x1, 0(x5)
+    lw x11, 0(x5)          
+
+    addi x12, x11, 10 # Check for internal stall here 
+

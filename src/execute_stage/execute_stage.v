@@ -9,6 +9,12 @@ module execute_stage(
     input ex_alu_src,
     input predictedTaken,
     input invalid_inst,
+    input ex_wb_reg_file,
+    input [31:0] m_unit_result,
+    input m_unit_wr,
+    input m_unit_ready,
+    input [4:0] m_unit_dest,
+    input [4:0] alu_rd,
     
     input [1:0] operand_a_forward_cntl,
     input [1:0] operand_b_forward_cntl,
@@ -21,7 +27,9 @@ module execute_stage(
     output wire [31:0] pc_jump_addr,
     output wire jump_en,
     output wire update_btb,
-    output wire [31:0] calc_jump_addr
+    output wire [31:0] calc_jump_addr,
+    output wire [4:0] wb_rd,
+    output wire wb_reg_file
 );
 
     wire [3:0] ALUControl;
@@ -29,6 +37,7 @@ module execute_stage(
     reg [31:0] op2_forwarded;
     reg [31:0] op1_alu;
     reg [31:0] op2_alu;
+    wire [31:0] alu_result;
 
     // Mux for forwarding operand 1
     always @(*) begin
@@ -110,7 +119,12 @@ module execute_stage(
         .op1(op1_alu),
         .op2(op2_alu),
         .ALUControl(ALUControl),
-        .result(result)
+        .result(alu_result)
     );
+
+    // Check if we have data from M unit
+    assign result = m_unit_ready ? m_unit_result : alu_result;
+    assign wb_reg_file = m_unit_ready ? m_unit_wr : ex_wb_reg_file;
+    assign wb_rd = m_unit_ready ? m_unit_dest : alu_rd;
 
 endmodule

@@ -36,6 +36,7 @@ module rv32i_core(
     wire m_unit_wr;
     wire [31:0] m_unit_result;
     wire m_unit_busy;
+    wire [4:0] m_unit_dest;
 
     // ID/EX Connection
     wire [31:0] ex_pc;
@@ -61,6 +62,8 @@ module rv32i_core(
     wire [1:0]  operand_b_cntl;
 
     // EX/MEM Conncetion
+    wire [4:0]  alu_rd;
+    wire        alu_wb;
     wire [31:0] ex_result, mem_result;
     wire [31:0] ex_op2_selected, mem_op2_selected;
     wire [4:0]  mem_wb_rd;
@@ -205,10 +208,12 @@ module rv32i_core(
         .instruction(m_unit_instruction),
         .rs1(m_unit_op1),
         .rs2(ex_op2_selected),
-        .wr(),
-        .result(),
-        .busy(),
-        .ready()
+        .rd(ex_wb_rd),
+        .wr(m_unit_wr),
+        .result(m_unit_result),
+        .busy(m_unit_busy),
+        .ready(m_unit_ready),
+        .result_dest(m_unit_dest)
     );
 
     // Instantiate the Forwading Unit module
@@ -235,6 +240,12 @@ module rv32i_core(
         .ex_alu_src(ex_alu_src),
         .predictedTaken(ex_pred_taken),
         .invalid_inst(m_unit_invalid_inst),
+        .ex_wb_reg_file(ex_wb_reg_file),
+        .m_unit_result(m_unit_result),
+        .m_unit_wr(m_unit_wr),
+        .m_unit_ready(m_unit_ready),
+        .m_unit_dest(m_unit_dest),
+        .alu_rd(ex_wb_rd),
         .operand_a_forward_cntl(operand_a_cntl),
         .operand_b_forward_cntl(operand_b_cntl),
         .data_forward_mem(mem_result),
@@ -245,7 +256,9 @@ module rv32i_core(
         .pc_jump_addr(ex_if_pc_jump_addr),
         .jump_en(ex_if_jump_en),
         .update_btb(btb_update),
-        .calc_jump_addr(btb_update_target)
+        .calc_jump_addr(btb_update_target),
+        .wb_rd(alu_rd),
+        .wb_reg_file(alu_wb)
     );
 
     // Instantiate the Hazard Unit module
@@ -257,6 +270,7 @@ module rv32i_core(
         .ex_load_inst(ex_wb_load),
         .jump_branch_taken(ex_if_jump_en),
         .invalid_inst(invalid_inst),
+        .stall(m_unit_busy),
         .if_id_pipeline_flush(if_id_pipeline_flush),
         .if_id_pipeline_en(if_id_pipeline_en),
         .id_ex_pipeline_flush(id_ex_pipeline_flush),
@@ -273,8 +287,8 @@ module rv32i_core(
         .ex_memory_load_type(ex_mem_load_type),
         .ex_memory_store_type(ex_mem_store_type),
         .ex_wb_load(ex_wb_load),
-        .ex_wb_reg_file(ex_wb_reg_file),
-        .ex_wb_rd(ex_wb_rd),
+        .ex_wb_reg_file(alu_wb),
+        .ex_wb_rd(alu_rd),
 
         .mem_result(mem_result),
         .mem_op2_selected(mem_op2_selected),

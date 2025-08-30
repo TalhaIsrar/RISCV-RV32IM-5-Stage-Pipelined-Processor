@@ -8,6 +8,7 @@ module riscv_m_unit(
 	input logic[31:0] instruction,
 	input logic[31:0] rs1,
 	input logic[31:0] rs2,
+    input logic[4:0] rd,
 
 	output logic wr,
 	output logic[31:0] result,
@@ -70,6 +71,13 @@ m_alu alu(
     .sub_result(sub_result), .div_rem(div_rem), .div_rem_neg(div_rem_neg), .product(product) // data outputs
 );
 
+// Register to hold destination register ID
+always_ff @(posedge clk or posedge resetn) begin
+    if (resetn)
+        result_dest <= 5'd0;
+    else if (valid)
+        result_dest <= rd;
+end
 
 // COMBINATORIAL BLOCK
 always_comb begin
