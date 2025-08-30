@@ -1,4 +1,4 @@
-`include "../soc/m_definitions.svh"
+`include "../src/m_unit_extension/m_definitions.svh"
 
 `timescale 1ns / 1ns
 
