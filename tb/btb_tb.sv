@@ -86,6 +86,25 @@ module btb_tb;
     pc = 32'h000C0000;
     #20
 
+    // Add third entry
+    pc = 32'h000C0000;
+    update_pc = 32'h000C0000;
+    update_target = 32'h000D0020;
+    update = 1;
+    #10;
+    update = 0;
+
+    // Check first, second, third entry
+    pc = 32'h000A0000;
+    #10;
+
+    pc = 32'h000B0000;
+    #10;
+
+    pc = 32'h000C0000;
+    #10;
+
+
     // Finish simulation
     #50;
     $finish;
