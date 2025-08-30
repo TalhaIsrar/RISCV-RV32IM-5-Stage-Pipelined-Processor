@@ -38,14 +38,21 @@ cont:
 
 done:   
     mul x10, x7, x3
-    nop
-    nop
-
     addi x5, x0, 8
 
     # Store/load
     sw x1, 0(x5)
     lw x11, 0(x5)          
 
-    addi x12, x11, 10 # Check for internal stall here 
+    addi x12, x11, 9 # Check for internal stall here 
+
+    # Store/load
+    sw x12, 0(x5)
+    lw x13, 0(x5) 
+
+    mul x14, x13, x12 # Check for internal stall here 
+
+
+
+
 
