@@ -152,7 +152,7 @@ module rv32i_core(
     riscv_m_unit riscv_m_unit_inst(
         .clk(clk),
         .resetn(rst),
-        .valid(invalid_inst),
+        .valid(invalid_inst && !ex_if_jump_en),
         .instruction(id_instruction),
         .rs1(id_op1),
         .rs2(id_op2),

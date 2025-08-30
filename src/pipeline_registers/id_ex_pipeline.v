@@ -39,7 +39,8 @@ module id_ex_pipeline(
     output reg [4:0] ex_rs1,
     output reg [4:0] ex_rs2,
     output reg [4:0] ex_wb_rd,
-    output reg ex_pred_taken
+    output reg ex_pred_taken,
+    output reg ex_invalid_inst
 );
 
     always @(posedge clk or posedge rst) begin

@@ -1,6 +1,8 @@
 module ex_mem_pipeline(
     input clk,
     input rst,
+    input pipeline_flush,
+
     input [31:0] ex_result,
     input [31:0] ex_op2_selected,
     input ex_memory_write,
@@ -30,6 +32,15 @@ module ex_mem_pipeline(
             mem_wb_load <= 1'b0;
             mem_wb_reg_file <= 1'b0;
             mem_wb_rd <= 5'b00000;
+        end else if (pipeline_flush) begin
+            mem_result <= 32'h00000000;
+            mem_op2_selected <= 32'h00000000;
+            mem_memory_write <= 1'b0;
+            mem_memory_load_type <= 3'b111;
+            mem_memory_store_type <= 2'b11;
+            mem_wb_load <= 1'b0;
+            mem_wb_reg_file <= 1'b0;
+            mem_wb_rd <= 5'b00000;            
         end else begin
             mem_result <= ex_result;
             mem_op2_selected <= ex_op2_selected;
