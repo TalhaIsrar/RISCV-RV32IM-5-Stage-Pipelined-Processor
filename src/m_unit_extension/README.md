@@ -6,7 +6,7 @@ Custom Implementation of Multiplication and Division Instructions
 
 This project implements the **M extension** of the RISC-V instruction set as a **co-processor** designed to handle multiplication and division operations. The design splits the implementation into two distinct components: a **control path** and a **data path**, each fulfilling a dedicated role in executing the arithmetic instructions.
 
-NOTE: This unit was already built by me independently before this project and that is why it is written in SystemVerilog as compared to the other modules. The origial repo for the code can be found at [RISCV-Custom-M-Unit-Extension](https://github.com/TalhaIsrar/RISCV-Custom-M-Unit-Extension)
+**NOTE:** This unit was already built by me independently before this project and that is why it is written in SystemVerilog as compared to the other modules. The origial repo for the code can be found at [RISCV-Custom-M-Unit-Extension](https://github.com/TalhaIsrar/RISCV-Custom-M-Unit-Extension)
 
 ---
 
@@ -168,7 +168,7 @@ These timings are independant of the RV32I considering the module as independant
 
 ## 📄 License
 
-This project is released under the MIT License. See the [LICENSE](LICENSE) file for details.
+This project is released under the MIT License.
 
 ---
 
