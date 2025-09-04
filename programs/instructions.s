@@ -3,7 +3,7 @@
 _start:
     # Base address
     lui   x1, 0x0
-    addi  x1, x1, 0x100   # x1 = 0x100
+    addi  x1, x1, 0x010   # x1 = 0x010
 
     # Word stores/loads
     addi  x2, x0, 0x12
@@ -20,7 +20,7 @@ _start:
     lhu   x8, 8(x1)
 
     # Byte store/load
-    addi  x9, x0, 0x7F
+    addi  x9, x0, 0xFF
     sb    x9, 10(x1)
     lb    x10, 10(x1)
     lbu   x11, 10(x1)

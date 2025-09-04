@@ -21,11 +21,22 @@ module data_mem (
     // Use a separate register to hold the raw word read from memory.
     reg [31:0] read_data_word;
 
+    // Buffers to keep the load type and byte offset saved since they are applied after read operation
+    reg [2:0] load_type_r;
+    reg [1:0] byte_offset_r;
+
     // Implement a single, synchronous read operation.
     // This is the core of BRAM inference.
     always @(posedge clk) begin
         read_data_word <= mem[word_addr];
     end
+
+    // Save these details to apply after read operation
+    always @(posedge clk) begin
+        load_type_r   <= load_type;
+        byte_offset_r <= addr[1:0]; // align with the word you just fetched
+    end
+
 
     // Implement synchronous write with byte-enables.
     // This maps directly to BRAM's byte-write enable feature.
@@ -34,13 +45,13 @@ module data_mem (
             case (store_type)
                 2'b00: begin // SB - store byte
                     if (byte_offset == 2'b00) mem[word_addr][7:0]   <= write_data[7:0];
-                    if (byte_offset == 2'b01) mem[word_addr][15:8]  <= write_data[15:8];
-                    if (byte_offset == 2'b10) mem[word_addr][23:16] <= write_data[23:16];
-                    if (byte_offset == 2'b11) mem[word_addr][31:24] <= write_data[31:24];
+                    if (byte_offset == 2'b01) mem[word_addr][15:8]  <= write_data[7:0];
+                    if (byte_offset == 2'b10) mem[word_addr][23:16] <= write_data[7:0];
+                    if (byte_offset == 2'b11) mem[word_addr][31:24] <= write_data[7:0];
                 end
                 2'b01: begin // SH - store halfword
                     if (byte_offset[1] == 1'b0) mem[word_addr][15:0]  <= write_data[15:0];
-                    else                       mem[word_addr][31:16] <= write_data[31:16];
+                    else                       mem[word_addr][31:16] <= write_data[15:0];
                 end
                 2'b10: begin // SW - store word
                     mem[word_addr] <= write_data;
@@ -52,9 +63,9 @@ module data_mem (
     // Perform byte/half-word selection and sign/zero extension *after* the read.
     // This logic is combinatorial and will be synthesized as muxes outside the BRAM.
     always @(*) begin
-        case (load_type)
+        case (load_type_r)
             3'b000: begin // LB - load byte, sign extend
-                case (byte_offset)
+                case (byte_offset_r)
                     2'b00: read_data = {{24{read_data_word[7]}},  read_data_word[7:0]};
                     2'b01: read_data = {{24{read_data_word[15]}}, read_data_word[15:8]};
                     2'b10: read_data = {{24{read_data_word[23]}}, read_data_word[23:16]};
@@ -63,14 +74,14 @@ module data_mem (
                 endcase
             end
             3'b001: begin // LH - load halfword, sign extend
-                if (byte_offset[1] == 1'b0) read_data = {{16{read_data_word[15]}}, read_data_word[15:0]};
+                if (byte_offset_r[1] == 1'b0) read_data = {{16{read_data_word[15]}}, read_data_word[15:0]};
                 else                        read_data = {{16{read_data_word[31]}}, read_data_word[31:16]};
             end
             3'b010: begin // LW - load word
                 read_data = read_data_word;
             end
             3'b011: begin // LBU - load byte, zero extend
-                case (byte_offset)
+                case (byte_offset_r)
                     2'b00: read_data = {24'h0, read_data_word[7:0]};
                     2'b01: read_data = {24'h0, read_data_word[15:8]};
                     2'b10: read_data = {24'h0, read_data_word[23:16]};
@@ -79,7 +90,7 @@ module data_mem (
                 endcase
             end
             3'b100: begin // LHU - load halfword, zero extend
-                if (byte_offset[1] == 1'b0) read_data = {16'h0, read_data_word[15:0]};
+                if (byte_offset_r[1] == 1'b0) read_data = {16'h0, read_data_word[15:0]};
                 else                        read_data = {16'h0, read_data_word[31:16]};
             end
             default: read_data = read_data_word;
