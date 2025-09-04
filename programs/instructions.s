@@ -1,29 +1,17 @@
 .section .text
 .global _start
 _start:
-    # Base address
-    lui   x1, 0x0
-    addi  x1, x1, 0x010   # x1 = 0x010
-
-    # Word stores/loads
-    addi  x2, x0, 0x12
-    addi  x3, x0, 0x34
-    sw    x2, 0(x1)
-    sw    x3, 4(x1)
-    lw    x4, 0(x1)
-    lw    x5, 4(x1)
-
-    # Half-word store/load (12-bit immediate allowed)
-    addi  x6, x0, 0x7CD   # must be <= 0x7FF (2047)
-    sh    x6, 8(x1)
-    lh    x7, 8(x1)
-    lhu   x8, 8(x1)
-
-    # Byte store/load
-    addi  x9, x0, 0xFF
-    sb    x9, 10(x1)
-    lb    x10, 10(x1)
-    lbu   x11, 10(x1)
-
-done:
-    j done
+    li   x1, -123
+    li   x2, 345
+    mul     x3, x1, x2       # low
+    mulh    x4, x1, x2       # high signed
+    mulhu   x5, x1, x2       # high unsigned
+    div     x6, x1, x2       # =0 (|num|<|den|)
+    rem     x7, x1, x2       # =-123456789
+    li      x8, -2147483648
+    li      x9, -1
+    div     x10, x8, x9      # overflow -> spec says =INT_MIN
+    rem     x11, x8, x9      # =0
+    div     x12, x1, x0      # divide by zero -> spec: -1
+    rem     x13, x1, x0      # remainder undefined (but many cores= x1)
+done: j done

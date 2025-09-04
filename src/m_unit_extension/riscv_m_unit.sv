@@ -75,7 +75,7 @@ m_alu alu(
 always_ff @(posedge clk or posedge resetn) begin
     if (resetn)
         result_dest <= 5'd0;
-    else if (valid)
+    else if (valid && !busy)
         result_dest <= rd;
 end
 
