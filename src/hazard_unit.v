@@ -65,7 +65,7 @@ module hazard_unit(
             if_id_pipeline_flush = 1'b0;
             if_id_pipeline_en = 1'b0;
             id_ex_pipeline_flush = 1'b0;
-            id_ex_pipeline_en = 1'b1;
+            id_ex_pipeline_en = 1'b0;
             pc_en = 1'b0;
         end
 

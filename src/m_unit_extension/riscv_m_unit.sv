@@ -42,13 +42,47 @@ logic [`MUX_MULTB_LENGTH-1:0] mux_multB;
 logic [`MUX_DIV_REM_LENGTH-1:0] mux_div_rem;
 logic [`MUX_OUT_LENGTH-1:0] mux_out;
 
+// Internal operands register to avoid data loss
+logic[31:0] rs1_r;
+logic[31:0] rs2_r;
+
+logic[31:0] rs1_hold;
+logic[31:0] rs2_hold;
+
+// delay ready & busy by 1 cycle
+logic ready_delay;
+logic busy_delay;
+always_ff @(posedge clk) begin
+    if (resetn) begin
+        ready_delay <= 1'b0;
+        busy_delay <= 1'b0;
+    end else begin
+        ready_delay <= ready;
+        busy_delay <= busy;
+    end
+end
+
+// Register to hold drs1 and rs2 if we have 2 consecutive m instructions
+always_ff @(posedge clk) begin
+    if (resetn) begin
+        rs1_hold <= 32'd0;
+        rs2_hold <= 32'b0;
+    end else if (valid && !(busy_delay || ready)) begin
+        rs1_hold <= rs1;
+        rs2_hold <= rs2;
+    end
+end
+
+// Select operands to pass (registered one is M followed by M otherwise normal ones)
+assign rs1_r = (valid && ready_delay) ? rs1_hold : rs1;
+assign rs2_r = (valid && ready_delay) ? rs2_hold : rs2;
 
 //// SUB-BLOCK INSTANTIATION
 
 // CONTROLLER
 m_controller controller (
     .clk(clk), .resetn(resetn), .pcpi_valid(valid), // control input
-    .instruction(instruction), .rs1(rs1), .rs2(rs2), // data inputs
+    .instruction(instruction), .rs1(rs1_r), .rs2(rs2_r), // data inputs
     .mux_R(mux_R), .mux_D(mux_D), .mux_Z(mux_Z), .mux_multA(mux_multA), .mux_multB(mux_multB), // control inputs
     .mux_div_rem(mux_div_rem), .mux_out(mux_out), .pcpi_ready(ready), .pcpi_wr(wr), .pcpi_busy(busy), // control inputs
     .rs1_neg(rs1_neg), .rs2_neg(rs2_neg) // data outputs
@@ -58,7 +92,7 @@ m_controller controller (
 // REGISTER FILE
 m_registers registers(
     .clk(clk), .resetn(resetn), .mux_multA(mux_multA), .mux_multB(mux_multB), .sub_neg(sub_neg), .mux_R(mux_R), .mux_D(mux_D), .mux_Z(mux_Z), // control inputs
-    .rs1(rs1), .rs2(rs2), .rs1_neg(rs1_neg), .rs2_neg(rs2_neg), .sub_result(sub_result), .product(product), // data inputs
+    .rs1(rs1_r), .rs2(rs2_r), .rs1_neg(rs1_neg), .rs2_neg(rs2_neg), .sub_result(sub_result), .product(product), // data inputs
     .mult_a(mult_a), .mult_b(mult_b), .R(R), .D(D), .Z(Z) // data outputs
 );
 
@@ -72,7 +106,7 @@ m_alu alu(
 );
 
 // Register to hold destination register ID
-always_ff @(posedge clk or posedge resetn) begin
+always_ff @(posedge clk) begin
     if (resetn)
         result_dest <= 5'd0;
     else if (valid && !busy)
