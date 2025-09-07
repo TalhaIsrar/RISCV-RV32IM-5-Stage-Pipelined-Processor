@@ -13,6 +13,9 @@
 `define FUNC7_ADD 7'b0000000
 `define FUNC7_SUB 7'b0100000
 
+// FUNC7 - M Unit
+`define FUNC7_M_UNIT 7'b0000001
+
 // ALU Codes
 `define ALU_ADD  4'b0000
 `define ALU_SUB  4'b0001

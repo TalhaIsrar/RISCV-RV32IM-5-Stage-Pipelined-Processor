@@ -21,6 +21,7 @@ module rv32i_core(
     wire if_id_pipeline_flush;
     wire if_id_pipeline_en;
     wire id_ex_pipeline_flush;
+    wire id_ex_pipeline_en;
     wire invalid_inst;
     wire load_stall;
 
@@ -160,6 +161,7 @@ module rv32i_core(
         .clk(clk),
         .rst(rst),
         .pipeline_flush(id_ex_pipeline_flush),
+        .pipeline_en(id_ex_pipeline_en),
         .id_invalid_inst(!load_stall && invalid_inst && !ex_if_jump_en),
         .id_instruction(id_instruction),
         .id_pc(id_pc),
@@ -271,10 +273,11 @@ module rv32i_core(
         .ex_load_inst(ex_wb_load),
         .jump_branch_taken(ex_if_jump_en),
         .invalid_inst(invalid_inst),
-        .stall(m_unit_busy),
+        .stall(m_unit_busy || m_unit_ready),
         .if_id_pipeline_flush(if_id_pipeline_flush),
         .if_id_pipeline_en(if_id_pipeline_en),
         .id_ex_pipeline_flush(id_ex_pipeline_flush),
+        .id_ex_pipeline_en(id_ex_pipeline_en),
         .pc_en(pc_en),
         .load_stall(load_stall)
     );

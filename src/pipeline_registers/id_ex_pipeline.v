@@ -4,6 +4,7 @@ module id_ex_pipeline(
     input clk,
     input rst,
     input pipeline_flush,
+    input pipeline_en,
 
     input id_invalid_inst,
     input [31:0] id_instruction,
@@ -87,7 +88,7 @@ module id_ex_pipeline(
             ex_rs1 <= id_rs1;
             ex_rs2 <= id_rs2;
             ex_pred_taken <= 1'b0;
-        end else begin
+        end else if (pipeline_en) begin
             ex_invalid_inst <= id_invalid_inst;
             ex_instruction <= id_instruction;
             ex_pc <= id_pc;

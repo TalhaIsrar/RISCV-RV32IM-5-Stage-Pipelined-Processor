@@ -10,7 +10,8 @@ module decode_controller (
     output reg [1:0] mem_store_type,
     output wb_load,
     output wb_reg_file,
-    output invalid_inst
+    output invalid_inst,
+    output m_type_inst
 );
     wire r_type_inst;
     wire i_type_inst;
@@ -35,8 +36,10 @@ module decode_controller (
                          opcode == `OPCODE_IJALR ||
                          opcode == `OPCODE_AUIPC ||
                          opcode == `OPCODE_JTYPE);
+
+    assign m_type_inst = (opcode == `OPCODE_RTYPE && (func7 == `FUNC7_M_UNIT));
                          
-    assign invalid_inst = !(r_type_inst || (opcode == `OPCODE_UTYPE) || wb_load || 
+    assign invalid_inst = !(r_type_inst || (opcode == `OPCODE_UTYPE) || wb_load ||
                             i_type_inst || (opcode == `OPCODE_IJALR) || mem_write ||
                             (opcode == `OPCODE_AUIPC) || (opcode == `OPCODE_BTYPE) || (opcode == `OPCODE_JTYPE));
 

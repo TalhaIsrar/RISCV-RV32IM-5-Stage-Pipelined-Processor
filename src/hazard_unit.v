@@ -13,6 +13,7 @@ module hazard_unit(
     output reg if_id_pipeline_flush,
     output reg if_id_pipeline_en,
     output reg id_ex_pipeline_flush,
+    output reg id_ex_pipeline_en,
     output reg pc_en,
     output reg load_stall
 );
@@ -38,6 +39,7 @@ module hazard_unit(
         if_id_pipeline_flush = 1'b0;
         if_id_pipeline_en = 1'b1;
         id_ex_pipeline_flush = 1'b0;
+        id_ex_pipeline_en = 1'b1;
         pc_en = 1'b1;
         load_stall = 1'b0;
 
@@ -59,6 +61,14 @@ module hazard_unit(
             end
         end
 
+        else if (stall) begin
+            if_id_pipeline_flush = 1'b0;
+            if_id_pipeline_en = 1'b0;
+            id_ex_pipeline_flush = 1'b0;
+            id_ex_pipeline_en = 1'b1;
+            pc_en = 1'b0;
+        end
+
         else if (invalid_inst) begin
             if_id_pipeline_flush = 1'b0;
             if_id_pipeline_en = 1'b1;
@@ -66,12 +76,6 @@ module hazard_unit(
             pc_en = 1'b1;            
         end
 
-        else if (stall) begin
-            if_id_pipeline_flush = 1'b0;
-            if_id_pipeline_en = 1'b0;
-            id_ex_pipeline_flush = 1'b1;
-            pc_en = 1'b0;
-        end
     end
 
 endmodule

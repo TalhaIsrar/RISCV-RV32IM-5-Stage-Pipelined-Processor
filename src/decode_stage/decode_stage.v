@@ -18,6 +18,7 @@ module decode_stage(
     output wire [6:0] opcode,
     output wire alu_src,
     output wire invalid_inst,
+    output wire m_type_inst,
     output wire [6:0] func7,
     output wire [2:0] func3,
     output wire mem_write,
@@ -65,7 +66,8 @@ module decode_stage(
         .mem_store_type(mem_store_type),
         .wb_load(wb_load),
         .wb_reg_file(wb_reg_file),
-        .invalid_inst(invalid_inst)
+        .invalid_inst(invalid_inst),
+        .m_type_inst(m_type_inst)
     );
 
     // Instantiate the register file module
