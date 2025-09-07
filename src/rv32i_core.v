@@ -24,6 +24,7 @@ module rv32i_core(
     wire id_ex_pipeline_en;
     wire invalid_inst;
     wire load_stall;
+    wire m_type_inst;
 
     // IF/ID Connection
     wire [31:0] if_instruction, id_instruction;
@@ -58,6 +59,7 @@ module rv32i_core(
     wire        id_wb_load, ex_wb_load;
     wire        id_wb_reg_file, ex_wb_reg_file;
     wire        id_pred_taken, ex_pred_taken;
+    wire        ex_forward_pipeline_flush;
 
     // Forwarding Unit Connection
     wire [1:0]  operand_a_cntl;
@@ -147,6 +149,7 @@ module rv32i_core(
         .opcode(id_opcode),
         .alu_src(id_alu_src),
         .invalid_inst(invalid_inst),
+        .m_type_inst(m_type_inst),
         .func7(id_func7),
         .func3(id_func3),
         .mem_write(id_mem_write),
@@ -182,6 +185,7 @@ module rv32i_core(
         .id_wb_rd(id_wb_rd),
         .id_pred_taken(id_pred_taken),
 
+        .ex_forward_pipeline_flush(ex_forward_pipeline_flush),
         .ex_invalid_inst(m_unit_invalid_inst),
         .ex_instruction(m_unit_instruction),
         .ex_pc(ex_pc),
@@ -236,6 +240,7 @@ module rv32i_core(
         .pc(ex_pc),
         .op1(ex_op1),
         .op2(ex_op2),
+        .pipeline_flush(ex_forward_pipeline_flush),
         .immediate(ex_immediate),
         .func7(ex_func7),
         .func3(ex_func3),
@@ -286,6 +291,7 @@ module rv32i_core(
     ex_mem_pipeline ex_mem_pipeline_inst (
         .clk(clk),
         .rst(rst),
+        .pipeline_en(!m_unit_busy),
         .ex_result(ex_result),
         .ex_op2_selected(ex_op2_selected),
         .ex_memory_write(ex_mem_write),

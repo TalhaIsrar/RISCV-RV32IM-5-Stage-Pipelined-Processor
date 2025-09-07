@@ -2,6 +2,7 @@ module ex_mem_pipeline(
     input clk,
     input rst,
     input pipeline_flush,
+    input pipeline_en,
 
     input [31:0] ex_result,
     input [31:0] ex_op2_selected,
@@ -41,7 +42,7 @@ module ex_mem_pipeline(
             mem_wb_load <= 1'b0;
             mem_wb_reg_file <= 1'b0;
             mem_wb_rd <= 5'b00000;            
-        end else begin
+        end else if (pipeline_en) begin
             mem_result <= ex_result;
             mem_op2_selected <= ex_op2_selected;
             mem_memory_write <= ex_memory_write;

@@ -26,6 +26,7 @@ module id_ex_pipeline(
     input [4:0] id_wb_rd,
     input id_pred_taken,
 
+    output reg ex_forward_pipeline_flush,
     output reg ex_invalid_inst,
     output reg [31:0] ex_instruction,
     output reg [31:0] ex_pc,
@@ -68,6 +69,7 @@ module id_ex_pipeline(
             ex_rs1 <= 5'b00000;
             ex_rs2 <= 5'b00000;
             ex_pred_taken <= 1'b0;
+            ex_forward_pipeline_flush <= 1'b0;
         end else if (pipeline_flush) begin
             ex_invalid_inst <= id_invalid_inst;
             ex_instruction <= id_instruction;
@@ -88,6 +90,7 @@ module id_ex_pipeline(
             ex_rs1 <= id_rs1;
             ex_rs2 <= id_rs2;
             ex_pred_taken <= 1'b0;
+            ex_forward_pipeline_flush <= pipeline_flush;
         end else if (pipeline_en) begin
             ex_invalid_inst <= id_invalid_inst;
             ex_instruction <= id_instruction;
@@ -108,6 +111,7 @@ module id_ex_pipeline(
             ex_rs1 <= id_rs1;
             ex_rs2 <= id_rs2;
             ex_pred_taken <= id_pred_taken;
+            ex_forward_pipeline_flush <= 1'b0;
         end
     end
 

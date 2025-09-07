@@ -2,6 +2,7 @@ module execute_stage(
     input [31:0] pc,
     input [31:0] op1,
     input [31:0] op2,
+    input pipeline_flush,
     input [31:0] immediate,
     input [6:0] func7,
     input [2:0] func3,
@@ -38,6 +39,9 @@ module execute_stage(
     reg [31:0] op1_alu;
     reg [31:0] op2_alu;
     wire [31:0] alu_result;
+
+    wire [31:0] op1_valid;
+    wire [31:0] op2_valid;
 
     // Mux for forwarding operand 1
     always @(*) begin
@@ -90,6 +94,8 @@ module execute_stage(
         endcase
     end
     
+    assign op1_valid = pipeline_flush ? 0 : op1_alu;
+    assign op2_valid = pipeline_flush ? 0 : op2_alu;
 
     // Instantiate the PC Jump Module
     pc_jump pc_jump_inst (
@@ -116,8 +122,8 @@ module execute_stage(
 
     // Instantiate the ALU module
     alu alu_inst (
-        .op1(op1_alu),
-        .op2(op2_alu),
+        .op1(op1_valid),
+        .op2(op2_valid),
         .ALUControl(ALUControl),
         .result(alu_result)
     );
@@ -125,6 +131,6 @@ module execute_stage(
     // Check if we have data from M unit
     assign result = m_unit_ready ? m_unit_result : alu_result;
     assign wb_reg_file = m_unit_ready ? m_unit_wr : ex_wb_reg_file;
-    assign wb_rd = m_unit_ready ? m_unit_dest : alu_rd;
+    assign wb_rd = m_unit_ready ? m_unit_dest : (pipeline_flush ? 5'b00000 : alu_rd);
 
 endmodule

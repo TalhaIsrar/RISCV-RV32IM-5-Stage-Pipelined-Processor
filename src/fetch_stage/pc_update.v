@@ -14,6 +14,6 @@ module pc_update(
 
     // The final next PC value is the one from BTB if it is valid & the dynamic predictor says to jump
     // Otherwise we use the PC value we calculated before
-    assign next_pc = (btb_pc_valid && btb_pc_predictTaken) ? btb_target_pc : pc_without_btb;
+    assign next_pc = (btb_pc_valid && btb_pc_predictTaken && !jump_en) ? btb_target_pc : pc_without_btb;
 
 endmodule
