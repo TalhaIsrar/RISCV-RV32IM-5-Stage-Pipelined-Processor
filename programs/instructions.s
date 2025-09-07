@@ -52,7 +52,5 @@ done:
 
     mul x14, x13, x12 # Check for internal stall here 
 
-
-
-
-
+    nop
+    nop
