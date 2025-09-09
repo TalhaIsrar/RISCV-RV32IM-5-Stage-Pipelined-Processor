@@ -68,7 +68,6 @@ module execute_stage(
     assign op2_selected = op2_forwarded;
     assign op1_selected = op1_forwarded;
 
-    // Based on instruction type select data to write into rd later
     always @(*) begin
         case (opcode)
             `OPCODE_IJALR: begin
@@ -93,7 +92,7 @@ module execute_stage(
             end      
         endcase
     end
-    
+        
     assign op1_valid = pipeline_flush ? 0 : op1_alu;
     assign op2_valid = pipeline_flush ? 0 : op2_alu;
 

@@ -15,33 +15,33 @@ module decode_controller (
 );
     wire r_type_inst;
     wire i_type_inst;
+    wire wb_inst;
+    wire u_type_inst;
+    wire b_type_inst;
+    wire j_type_inst;
+    wire aupic_inst;
+    wire jalr_inst;
 
-    assign r_type_inst = (opcode == `OPCODE_RTYPE && (func7 == `FUNC7_ADD || func7 == `FUNC7_SUB));
+    assign wb_inst = (opcode == `OPCODE_RTYPE);
+    assign r_type_inst = (wb_inst && (func7 == `FUNC7_ADD || func7 == `FUNC7_SUB));
     assign i_type_inst = (opcode == `OPCODE_ITYPE);
-
-    assign ex_alu_src  = (opcode == `OPCODE_ITYPE ||
-                         opcode == `OPCODE_ILOAD ||
-                         opcode == `OPCODE_STYPE ||
-                         opcode == `OPCODE_UTYPE ||
-                         opcode == `OPCODE_AUIPC ||
-                         opcode == `OPCODE_IJALR);
-
     assign mem_write = (opcode == `OPCODE_STYPE);
     assign wb_load = (opcode == `OPCODE_ILOAD);
-    
-    assign wb_reg_file  = (opcode == `OPCODE_RTYPE ||
-                         opcode == `OPCODE_UTYPE ||
-                         opcode == `OPCODE_ITYPE ||
-                         opcode == `OPCODE_ILOAD ||
-                         opcode == `OPCODE_IJALR ||
-                         opcode == `OPCODE_AUIPC ||
-                         opcode == `OPCODE_JTYPE);
+    assign m_type_inst = (wb_inst && (func7 == `FUNC7_M_UNIT));
+    assign u_type_inst = (opcode == `OPCODE_UTYPE);
+    assign b_type_inst = (opcode == `OPCODE_BTYPE);
+    assign j_type_inst = (opcode == `OPCODE_JTYPE);
+    assign aupic_inst = ( opcode == `OPCODE_AUIPC);
+    assign jalr_inst = (opcode == `OPCODE_IJALR);
 
-    assign m_type_inst = (opcode == `OPCODE_RTYPE && (func7 == `FUNC7_M_UNIT));
+    assign ex_alu_src  = i_type_inst || wb_load || mem_write ||
+                          u_type_inst ||aupic_inst || jalr_inst;
+
+    assign wb_reg_file  = wb_inst || i_type_inst || wb_load ||
+                          u_type_inst ||aupic_inst || jalr_inst || j_type_inst;
                          
-    assign invalid_inst = !(r_type_inst || (opcode == `OPCODE_UTYPE) || wb_load ||
-                            i_type_inst || (opcode == `OPCODE_IJALR) || mem_write ||
-                            (opcode == `OPCODE_AUIPC) || (opcode == `OPCODE_BTYPE) || (opcode == `OPCODE_JTYPE));
+    assign invalid_inst = !(r_type_inst || ex_alu_src ||
+                            b_type_inst || j_type_inst);
 
     always @(*) begin
         mem_store_type = `STORE_DEF; // Disable writing

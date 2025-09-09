@@ -27,20 +27,18 @@ module pc_jump(
     always @(*) begin
         if (jump_inst)
             jump_en = 1'b1;
-        else begin
-            if(branch_inst) begin
-                case(func3)
-                    `BTYPE_BEQ:  jump_en = (alu_result == 0); // SUB
-                    `BTYPE_BNE:  jump_en = (alu_result != 0); // SUB 
-                    `BTYPE_BLT:  jump_en = (alu_result == 1); // SLT signed
-                    `BTYPE_BGE:  jump_en = (alu_result == 0); // SLT signed
-                    `BTYPE_BLTU: jump_en = (alu_result == 1); // SLTU unsigned
-                    `BTYPE_BGEU: jump_en = (alu_result == 0); // SLTU unsigned
-                    default:     jump_en = (alu_result == 0);
-                endcase
-            end else
-                jump_en = 1'b0;
-        end  
+        else if(branch_inst) begin
+            case(func3)
+                `BTYPE_BEQ:  jump_en = (alu_result == 0); // SUB
+                `BTYPE_BNE:  jump_en = (alu_result != 0); // SUB 
+                `BTYPE_BLT:  jump_en = (alu_result == 1); // SLT signed
+                `BTYPE_BGE:  jump_en = (alu_result == 0); // SLT signed
+                `BTYPE_BLTU: jump_en = (alu_result == 1); // SLTU unsigned
+                `BTYPE_BGEU: jump_en = (alu_result == 0); // SLTU unsigned
+                default:     jump_en = (alu_result == 0);
+            endcase
+        end else
+            jump_en = 1'b0;
     end
 
     assign modify_pc = jump_en ^ predictedTaken;
