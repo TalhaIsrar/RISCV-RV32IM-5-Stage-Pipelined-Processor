@@ -10,15 +10,13 @@ module alu_control(
     reg [1:0] ALUOp;
 
     // Main control (opcode-based)
+    wire is_alu    = (opcode == `OPCODE_RTYPE) || (opcode == `OPCODE_ITYPE);
+    wire is_branch = (opcode == `OPCODE_BTYPE);
+
     always @(*) begin
-        case (opcode)
-            `OPCODE_RTYPE: ALUOp = 2'b10; // R-type
-            `OPCODE_ITYPE: ALUOp = 2'b10; // I-type ALU
-            `OPCODE_ILOAD: ALUOp = 2'b00; // Load
-            `OPCODE_STYPE: ALUOp = 2'b00; // Store
-            `OPCODE_BTYPE: ALUOp = 2'b01; // Branch
-            default:      ALUOp = 2'b00;
-        endcase
+        if (is_alu)       ALUOp = 2'b10;
+        else if (is_branch) ALUOp = 2'b01;
+        else              ALUOp = 2'b00;
     end
 
     // ALU control (funct-based)
