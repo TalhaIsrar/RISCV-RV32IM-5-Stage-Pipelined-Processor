@@ -25,7 +25,7 @@ module rv32i_core_tb;
         rst = 0;
 
         // Run simulation for 500ns then finish
-        #1500;
+        #1700;
         $finish;
     end
 endmodule

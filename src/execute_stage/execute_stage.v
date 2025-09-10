@@ -107,7 +107,6 @@ module execute_stage(
         .op1(op1_forwarded),
         .opcode(opcode),
         .func3(func3),
-        .alu_result(result),
         .lt_flag(lt_flag),
         .ltu_flag(ltu_flag),
         .zero_flag(zero_flag),
