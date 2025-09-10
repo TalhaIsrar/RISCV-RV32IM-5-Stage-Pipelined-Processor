@@ -96,6 +96,10 @@ module execute_stage(
     assign op1_valid = pipeline_flush ? 0 : op1_alu;
     assign op2_valid = pipeline_flush ? 0 : op2_alu;
 
+    wire lt_flag;
+    wire ltu_flag;
+    wire zero_flag;
+
     // Instantiate the PC Jump Module
     pc_jump pc_jump_inst (
         .pc(pc),
@@ -104,6 +108,9 @@ module execute_stage(
         .opcode(opcode),
         .func3(func3),
         .alu_result(result),
+        .lt_flag(lt_flag),
+        .ltu_flag(ltu_flag),
+        .zero_flag(zero_flag),
         .predictedTaken(predictedTaken),
         .update_pc(pc_jump_addr),
         .jump_addr(calc_jump_addr),
@@ -124,7 +131,10 @@ module execute_stage(
         .op1(op1_valid),
         .op2(op2_valid),
         .ALUControl(ALUControl),
-        .result(alu_result)
+        .result(alu_result),
+        .lt_flag(lt_flag),
+        .ltu_flag(ltu_flag),
+        .zero_flag(zero_flag)
     );
 
     // Check if we have data from M unit

@@ -12,22 +12,30 @@ module forwarding_unit(
     output reg [1:0] operand_b_cntl
 );
 
-    always @(*) begin
-        if (rs1 == rd_mem && rd_mem != 5'b00000 && reg_file_wr_mem)
-            operand_a_cntl = `FORWARD_MEM;
-        else if (rs1 == rd_wb && rd_wb != 5'b00000 && reg_file_wr_wb)
-            operand_a_cntl = `FORWARD_WB;
-        else 
-            operand_a_cntl = `FORWARD_ORG;
-    end
+    wire valid_rd_mem;
+    wire valid_rd_wb;
+
+    wire valid_rs1_mem;
+    wire valid_rs1_wb;
+    wire valid_rs2_mem;
+    wire valid_rs2_wb;
+
+    assign valid_rd_mem = rd_mem != 5'b00000 && reg_file_wr_mem;
+    assign valid_rd_wb = rd_wb != 5'b00000 && reg_file_wr_wb;
+
+    assign valid_rs1_mem = rs1 == rd_mem && valid_rd_mem;
+    assign valid_rs1_wb = rs1 == rd_wb && valid_rd_wb;
+    assign valid_rs2_mem = rs2 == rd_mem && valid_rd_mem;
+    assign valid_rs2_wb = rs2 == rd_wb && valid_rd_wb;
 
     always @(*) begin
-        if (rs2 == rd_mem && rd_mem != 5'b00000 && reg_file_wr_mem)
-            operand_b_cntl = `FORWARD_MEM;
-        else if (rs2 == rd_wb && rd_wb != 5'b00000 && reg_file_wr_wb)
-            operand_b_cntl = `FORWARD_WB;
-        else 
-            operand_b_cntl = `FORWARD_ORG;
+        operand_a_cntl = valid_rs1_mem ? `FORWARD_MEM :
+                        valid_rs1_wb  ? `FORWARD_WB  :
+                                        `FORWARD_ORG;
+
+        operand_b_cntl = valid_rs2_mem ? `FORWARD_MEM :
+                        valid_rs2_wb  ? `FORWARD_WB  :
+                                        `FORWARD_ORG;
     end
 
 endmodule
