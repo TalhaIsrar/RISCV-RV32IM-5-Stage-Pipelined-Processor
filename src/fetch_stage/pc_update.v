@@ -7,14 +7,15 @@ module pc_update(
     input jump_en,
     output reg [31:0] next_pc
 );
-    always @* begin
-        if (jump_en)
-            next_pc = pc_jump_addr;
-        else if (btb_pc_valid && btb_pc_predictTaken)
-            next_pc = btb_target_pc;
-        else
-            next_pc = pc + 4; // The next PC value in case Branch Target Buffer doesnt have a valid entry
-    end
+    wire [1:0] selection = {jump_en , btb_pc_valid && btb_pc_predictTaken};
 
+    always @(*) begin
+        case (selection)
+            2'b11,
+            2'b10 : next_pc = pc_jump_addr;
+            2'b01 : next_pc = btb_target_pc;
+            default : next_pc = pc + 4;
+        endcase
+    end
 
 endmodule
