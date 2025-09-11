@@ -20,6 +20,8 @@ module pc_jump(
     wire jalr_inst;
     wire branch_taken;
     wire jump_en;
+    wire [31:0] adder_out;
+    wire [31:0] pc_inc;
 
     assign jalr_inst = opcode ==`OPCODE_IJALR;
     assign jump_inst = (opcode ==`OPCODE_JTYPE) || jalr_inst;
@@ -46,11 +48,12 @@ module pc_jump(
 
     assign modify_pc = jump_en ^ predictedTaken;
     
-    assign input_a = jalr_inst ? op1  & ~32'b1 : pc;
-    assign input_b = jalr_inst ? immediate & ~32'b1 : immediate;
+    assign input_a = jalr_inst ? op1  : pc;
+    assign adder_out = input_a + immediate;
+    assign jump_addr = jalr_inst ? (adder_out & 32'hFFFFFFFE) : adder_out;
 
-    assign jump_addr = input_a + input_b;
-    assign update_pc = predictedTaken ? pc + 32'h4 : jump_addr;
+    assign pc_inc = pc + 32'h4;
+    assign update_pc = predictedTaken ? pc_inc : jump_addr;
 
 
 endmodule
