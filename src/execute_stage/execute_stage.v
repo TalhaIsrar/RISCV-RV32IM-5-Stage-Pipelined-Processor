@@ -43,10 +43,13 @@ module execute_stage(
     wire [31:0] op1_valid;
     wire [31:0] op2_valid;
 
+    wire lt_flag;
+    wire ltu_flag;
+    wire zero_flag;    
+
     // Mux for forwarding operand 1
     always @(*) begin
         case (operand_a_forward_cntl)
-            `FORWARD_ORG: op1_forwarded = op1;
             `FORWARD_MEM: op1_forwarded = data_forward_mem;
             `FORWARD_WB:  op1_forwarded = data_forward_wb;
             default:      op1_forwarded = op1;
@@ -56,7 +59,6 @@ module execute_stage(
     // Mux for forwarding operand 2
     always @(*) begin
         case (operand_b_forward_cntl)
-            `FORWARD_ORG: op2_forwarded = op2;
             `FORWARD_MEM: op2_forwarded = data_forward_mem;
             `FORWARD_WB:  op2_forwarded = data_forward_wb;
             default:      op2_forwarded = op2;
@@ -95,10 +97,6 @@ module execute_stage(
         
     assign op1_valid = pipeline_flush ? 0 : op1_alu;
     assign op2_valid = pipeline_flush ? 0 : op2_alu;
-
-    wire lt_flag;
-    wire ltu_flag;
-    wire zero_flag;
 
     // Instantiate the PC Jump Module
     pc_jump pc_jump_inst (
