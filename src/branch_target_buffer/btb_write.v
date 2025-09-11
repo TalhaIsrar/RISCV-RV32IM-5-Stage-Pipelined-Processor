@@ -27,7 +27,7 @@ module btb_write(
 
     // Check for each branch in set
     wire check_branch1, check_branch2;
-    wire new_entry_check;
+    wire entry_exists;
 
     // Insert data branches
     wire insert_branch1, insert_branch2;
@@ -67,41 +67,36 @@ module btb_write(
     assign check_branch1 = valid1 && (update_tag == tag1);    
     assign check_branch2 = valid2 && (update_tag == tag2);
 
-    // Check if entry doesnt exist in either branches in a set
-    // New entry = 1 else 0 if exists
-    assign new_entry_check = !(check_branch1 || check_branch2);
+    // Check if entry exist in either branches in a set
+    // Entry exists = 1 else 0 if doesnt exists
+    assign entry_exists = check_branch1 || check_branch2;
 
     // Read the LRU value for the current set
     assign current_LRU_write = LRU[update_index];
 
     // Path if tag doesnt exist
     // Use LRU to decide to write in Branch1 or branch0
-    assign insert_branch1 = new_entry_check ? current_LRU_write : 1'b0;
-    assign insert_branch2 = new_entry_check ? current_LRU_write : 1'b1;
-
-    // Check if branch1 or branch2 is being updated or replaced 
-    // Only 1 of these will be 1
-    assign take_branch1 = check_branch1 || insert_branch1;
-    assign take_branch2 = check_branch2 || !(insert_branch2);
+    assign insert_branch1 = entry_exists ? check_branch1 : current_LRU_write;
+    assign insert_branch2 = entry_exists ? check_branch2 : !current_LRU_write;
 
     // Valid remain 1 if it was 1 and if new value is being inserted
-    assign write_valid1 = valid1 || take_branch1;
-    assign write_valid2 = valid2 || take_branch2;
+    assign write_valid1 = valid1 || insert_branch1;
+    assign write_valid2 = valid2 || insert_branch2;
 
     // Mux to select which branch to replace tag of and which to keep as old one
     assign write_tag1 = insert_branch1 ? update_tag : tag1;
-    assign write_tag2 = insert_branch2 ? tag2 : update_tag;
+    assign write_tag2 = insert_branch2 ? update_tag : tag2;
 
     // Mux to select which branch to write new/updated target into and which to keep as old one
-    assign write_target1 = take_branch1 ? update_target : target1;
-    assign write_target2 = take_branch2 ? update_target : target2;
+    assign write_target1 = insert_branch1 ? update_target : target1;
+    assign write_target2 = insert_branch2 ? update_target : target2;
 
     // Use the MUX to check if entry is new/replacement
     // If entry is new value then initialize it with strongNotTaken(00) before passing to FSM
     // FSM will decide on base of old value and mispredicted, the new prediction for the address
     // FSM is using dynamic 2 bit predictor
-    assign current_state_branch1 =  insert_branch1 ? `STRONG_NOT_TAKEN : state1;
-    assign current_state_branch2 =  !(insert_branch2) ? `STRONG_NOT_TAKEN : state2;
+    assign current_state_branch1 =  entry_exists ? state1 : `STRONG_NOT_TAKEN;
+    assign current_state_branch2 =  entry_exists ? state2 : `STRONG_NOT_TAKEN;
 
     dynamic_branch_predictor fsm_branch1(
         .current_state(current_state_branch1),
@@ -115,8 +110,8 @@ module btb_write(
         .next_state(next_state_branch2)
     );
 
-    assign write_state1 = take_branch1 ? next_state_branch1 : state1;
-    assign write_state2 = take_branch2 ? next_state_branch2 : state2;
+    assign write_state1 = insert_branch1 ? next_state_branch1 : state1;
+    assign write_state2 = insert_branch2 ? next_state_branch2 : state2;
 
     // Initialize the final set which we have to replace in BTB file
     // Set is formed from concationation of all results calculated above
@@ -124,6 +119,6 @@ module btb_write(
                          write_valid2, write_tag2, write_target2, write_state2, 2'b00};
 
     // Calculate the next LRU value for current set
-    assign next_LRU_write = new_entry_check ? (insert_branch1 ? 1'b0 : 1'b1) : current_LRU_write;
+    assign next_LRU_write = entry_exists ? current_LRU_write : insert_branch2;
 
 endmodule
