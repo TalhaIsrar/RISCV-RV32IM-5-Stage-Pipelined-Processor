@@ -1,7 +1,3 @@
-Here’s a **README** for your **MEM Stage** folder following the same style as your WB README:
-
----
-
 # Memory Stage Module
 
 This folder contains the implementation of the **Memory (MEM) stage** for the RV32IM 5-stage pipelined processor.
@@ -23,11 +19,6 @@ The MEM stage handles **memory read/write operations** and passes the ALU result
 * Handles **load** and **store** instructions with byte, halfword, and word granularity.
 * Synchronous read and write operations using BRAM inference.
 * Computes the value to forward to the Writeback stage.
-
-## 🛠️ Tools Used
-
-* **Vivado + ModelSim** (for RTL simulation and synthesis)
-* **RISC-V GCC toolchain** (for test programs feeding the MEM stage)
 
 ## 📜 How It Works
 

@@ -17,11 +17,6 @@ The WB stage selects the correct value to write back to the register file based 
 * Selects between **memory read data** and **ALU result**
 * Outputs the value to be written back to the register file
 
-## 🛠️ Tools Used
-
-* **Vivado + ModelSim** (for RTL simulation and synthesis)
-* **RISC-V GCC toolchain** (for test programs feeding the WB stage)
-
 ## 📜 How It Works
 
 Ports:
