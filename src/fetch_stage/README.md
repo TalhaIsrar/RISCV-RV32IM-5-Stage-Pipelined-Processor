@@ -74,7 +74,7 @@ end
 
 * **Instruction Memory:** Provides the instruction for the decode stage.
 
-![Instruction Memory](../../imgs/submodules/rv32im_pc_update.png)
+![Instruction Memory](../../imgs/submodules/rv32im_inst_mem.png)
 
 ---
 
