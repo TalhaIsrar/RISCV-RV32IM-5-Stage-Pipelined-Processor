@@ -1,63 +1,157 @@
 # RV32IM 5-Stage Pipelined Processor
 
-This repository contains the implementation and verification of a RISC-V RV32IM processor with a classic 5-stage pipeline.  
-The design supports the base **RV32I** instruction set along with **M-extension** (multiplication and division). It also has a hazard unit for flushing/stalling the pipeline, a forwarding unit to prevent data hazards and a branch target buffer for branch prediction 
+This repository contains the implementation and verification of a RISC-V RV32IM processor with a classic 5-stage pipeline.
+The design supports the base **RV32I** instruction set along with **M-extension** (multiplication and division). It also has a hazard unit for flushing/stalling the pipeline, a forwarding unit to prevent data hazards, and a branch target buffer for branch prediction.
+
+---
+
+## 📑 Table of Contents
+
+* [Block Diagram](#-block-diagram)
+* [Repository Structure](#-repository-structure)
+* [Pipeline Stages](#-pipeline-stages)
+* [Supporting Modules](#-supporting-modules)
+* [Timing](#-timing)
+* [FPGA Resource Utilization](#-fpga-resource-utilization)
+* [Performance Improvements](#-performance-improvements)
+  * [M-Unit vs Shift-Add Multiply](#m-unit-vs-shift-add-multiply)
+  * [BTB Speedup](#btb-speedup)
+* [How to Run](#-how-to-run)
+* [Future Work](#-future-work)
+* [License](#-license)
+
+---
 
 ## 📊 Block Diagram
 
 ![RV32IM Core Top](imgs/rv32im_block_diagram.png)
 
+---
+
 ## 📂 Repository Structure
 
-- **src/**  
-  Contains RTL source files for the processor (written in Verilog/SystemVerilog).  
-  Includes pipeline stages, forwarding unit, hazard detection, control logic, and ALU.  
+```
+src/                 
+  ├── fetch_stage/
+  ├── decode_stage/
+  ├── execute_stage/
+  ├── mem_stage/
+  ├── writeback_stage/ 
+  ├── pipeline_registers/
+  ├── branch_target_buffer/
+  ├── m_unit_extension/ 
+  ├── forwarding_unit.v
+  ├── hazard_unit.v
+  ├── rv32i_core.v
+  └── defines.vh
+tb/                   Testbenches
+programs/             Sample RISC-V programs
+imgs/                 Block diagrams
+LICENSE
+README.md             Main documentation
+```
 
-- **tb/**  
-  Testbenches for simulation and verification.  
+---
 
-- **programs/**  
-  Sample RISC-V assembly/C programs compiled to run on the processor.  
-  Used for functional testing (e.g., arithmetic ops, loops, memory tests).  
+## 🔄 Pipeline Stages
 
-- **LICENSE**  
-  License information for using this project.  
+Each stage has its own folder with detailed documentation:
 
-- **README.md**  
-  Main documentation file (this one).  
+* [Instruction Fetch (IF)](src/fetch_stage/README.md)
+* [Instruction Decode (ID)](src/decode_stage/README.md)
+* [Execute (EX)](src/execute_stage/README.md)
+* [Memory Access (MEM)](src/mem_stage/README.md)
+* [Write Back (WB)](src/writeback_stage/README.md)
 
-## 🚀 Features
+### Special Notes
 
-- 5-Stage pipeline: IF, ID, EX, MEM, WB  
-- Hazard detection and forwarding unit  
-- Branch target buffer (BTB) for branch prediction  
-- Support for RV32I + M-extension (mul/div)  
-- Modular design for easy extension  
+* In **IF/ID**, no extra instruction register is needed (instruction memory has 1-cycle latency).
+* In **MEM/EX**, no pipeline register for memory result is required (synchronous read provides natural delay).
+* **IF/ID** and **ID/EX** pipeline registers support **flush** and **enable** signals from the hazard unit. On flush, all signals turn into a NOP.
 
-## 🛠️ Tools Used
+---
 
-- **Vivado + ModelSim** (simulation and synthesis)  
-- **RISC-V GCC toolchain** (for assembling test programs)  
+## 🧩 Supporting Modules
+
+* [Branch Target Buffer (BTB)](src/branch_target_buffer/README.md) – simple branch predictor with update mechanism.
+* [M Unit](src/m_unit_extension/README.md) – RV32M extension, hardware multiplier/divider.
+* [Forwarding Unit](src/README.md) – resolves data hazards by forwarding from MEM/WB.
+* [Hazard Unit](src/README.md) – detects load-use hazards, handles pipeline stalls and flushes.
+
+---
+
+## ⚡ Performance Improvements
+
+### M-Unit vs Shift-Add Multiply
+
+* Traditional **shift-add multiply/shift-sub divide** requires **32 iterations** for a 32-bit multiply/divide and each iteration can have 4-5 instruction each instruction taking 5 cycles. This totals around **600-700 cycles**.
+* The dedicated **M-unit** executes multiplication in **1 cycles** and for division a maximum of **27 cycle**.
+* This reduces CPI drastically for multiplication-heavy programs (e.g., matrix multiply).
+
+### BTB Speedup
+
+* Without BTB: Every taken branch incurs a **2-cycle penalty**.
+* With BTB: Correctly predicted branches avoid stalls, improving performance by **\~15–25%** on loop-heavy benchmarks.
+
+---
+
+## ⏱ Timing
+
+* Maximum clock frequency achieved: **70 MHz** on Nexys A7 (XC7A100T).
+* Critical path: Execute stage (ALU + forwarding logic + PC Jump Address).
+
+![Timing Summary](imgs/implementation/timing.png)
+
+---
+
+## 📊 FPGA Resource Utilization
+
+* The results are Post-Implementation results for Nexys A7 (XC7A100T) at 70MHz.
+
+| Resource        | Utilization |
+| --------------- | ----------- |
+| Slice LUTs      | 596         |
+| Slice Registers | 203         |
+| BRAM            | 1           |
+| DSP Blocks      | 4           |
+
+![Utilization Summary](imgs/implementation/utilization.png)
+
+---
+
+### ⚡ Power Consumption
+
+* **Dynamic Power:** 0.043 W (due to switching activity during operation)
+* **Static Power:** 0.091 W (leakage and idle power)
+* **Total Estimated Power:** 0.134 W
+
+💡 *These numbers come from Vivado’s post-implementation power report at 70 MHz.*
+
+![Power Summary](imgs/implementation/power.png)
+
+---
 
 ## 📜 How to Run
 
-1. Clone the repo  
+1. Clone the repo:
+
    ```bash
    git clone https://github.com/TalhaIsrar/RISCV-RV32IM-5-Stage-Pipelined-Processor
    ```
+2. Open **ModelSim** or **Vivado** project and add files from `src/` and `tb/`.
+3. Compile RISC-V test programs from `programs/` and load them into instruction memory.
 
-2. Open **ModelSim** or **Vivado** project and add RTL files from `src/` and testbench files from `tb/`.
-
-3. Run provided test programs from `programs/`.
+---
 
 ## 📌 Future Work
 
 * Support for CSR instructions
-* Improved branch predictor
-* Integration with memory-mapped I/O peripherals
-* UVM-based verification environment
+* More advanced branch predictors (2-bit, gshare)
+* Memory-mapped I/O support
+* UVM-based verification
 
 ---
+
 
 ## 🔗 References
 
