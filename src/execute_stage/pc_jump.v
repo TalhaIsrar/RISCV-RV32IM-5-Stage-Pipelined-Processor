@@ -48,7 +48,7 @@ module pc_jump(
 
     assign modify_pc = jump_en ^ predictedTaken;
     
-    assign input_a = jalr_inst ? op1  : pc;
+    assign input_a = jalr_inst ? op1 : pc;
     assign adder_out = input_a + immediate;
     assign jump_addr = jalr_inst ? (adder_out & 32'hFFFFFFFE) : adder_out;
 
