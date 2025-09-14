@@ -11,9 +11,11 @@ The goal of these tests is to validate both functionality and performance under 
 - Validates the **BTB correctness** under frequent taken/not-taken branches.
 - A variety of tests for different workloads are compared and presented below. The tests can be found at [Branch Target Buffer tests](../programs/tests/btb/).
 - The improvement from using the Branch Target Buffer (BTB) is calculated as:
+
 $$
 \text{Improvement (\%)} = \frac{\text{Cycles without BTB} - \text{Cycles with BTB}}{\text{Cycles without BTB}} \times 100
 $$
+
 - The total number of cycles in simulation can be calculated using:
 
 $$
@@ -41,8 +43,43 @@ After using the BTB we get the following results. The BTB is connected and dis-c
 
 ![Long Forward Branch with BTB](../imgs/tests/btb/long_forward_btb.png)
 
+See [Results](../imgs/tests/btb/) for more results.
+
 ### 2. Multiplication Tests
 - Covers **shift-and-add multiply** (software) and **hardware MUL instructions**.
+- Covers **shift-and-sub divide** (software) and **hardware DIV/REM instructions**.
+- The main tests can be found at [M Unit Tests](../programs/tests/m_unit/).
+- The improvement from using the M unit is calculated as:
+
+$$
+\text{Improvement (\%)} = \frac{\text{Cycles worst case SW} - \text{Cycles worst case HW}}{\text{Cycles worst case SW}} \times 100
+$$
+
+- The total number of cycles in simulation can be calculated using:
+
+$$
+\text{Total Cycles} = \frac{\text{Time of write of MUL/DIV result in regfile} - \text{Time when reset is released}}{\text{Simulation clock period}}
+$$
+
+Where:
+
+* **Time of write of MUL/DIV result in regfile** = the timestamp in your simulation when the mul/div result writes back to the register file.
+* **Time when reset is released** = the simulation time when reset is deasserted.
+* **Simulation clock period** = the time period of your clock in the testbench (e.g., 10 ns).
+
+| Test         | SW Implementation | HW Extension | Improvement | Speedup |
+| ------------ | ----------------- | ------------ | ----------- | ------- |
+| Multiply     |        231        |      10      |    95.7 %   |  21.3x  |
+| Divide       |        350        |      41      |    88.3 %   |  8.54x  |
+
+One such result can be seen below. The following test is of Multiplication.
+![Multiplication SW](../imgs/tests/m_unit/mul_sw.png)
+
+Using the M instructions from M extension we get the same result but in much less cycles.
+
+![Multiplication HW](../imgs/tests/m_unit/mul_hw.png)
+
+See [Results](../imgs/tests/m_unit/) for more results.
 
 ### 3. Forwarding and Hazard Tests
 
