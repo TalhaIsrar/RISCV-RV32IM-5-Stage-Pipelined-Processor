@@ -107,7 +107,7 @@ module rv32i_core(
         .rst(rst),
         .pc(if_pc),
         .update_pc(ex_pc),
-        .update(btb_update), // Replace this by 1'b0 to disconnect BTB
+        .update(0), // Replace this by 1'b0 to disconnect BTB otherwise keep btb_update
         .update_target(btb_update_target),
         .mispredicted(ex_if_jump_en),
         .target_pc(btb_target_pc),

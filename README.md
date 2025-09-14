@@ -11,11 +11,12 @@ The design supports the base **RV32I** instruction set along with **M-extension*
 * [Repository Structure](#-repository-structure)
 * [Pipeline Stages](#-pipeline-stages)
 * [Supporting Modules](#-supporting-modules)
-* [Timing](#-timing)
-* [FPGA Resource Utilization](#-fpga-resource-utilization)
 * [Performance Improvements](#-performance-improvements)
   * [M-Unit vs Shift-Add Multiply](#m-unit-vs-shift-add-multiply)
   * [BTB Speedup](#btb-speedup)
+* [Timing](#-timing)
+* [FPGA Resource Utilization](#-fpga-resource-utilization)
+* [Power Consumption](#-power-consumption)
 * [How to Run](#-how-to-run)
 * [Future Work](#-future-work)
 * [License](#-license)
@@ -91,7 +92,17 @@ Each stage has its own folder with detailed documentation:
 ### BTB Speedup
 
 * Without BTB: Every taken branch incurs a **2-cycle penalty**.
-* With BTB: Correctly predicted branches avoid stalls, improving performance by **\~15–25%** on loop-heavy benchmarks.
+* With BTB: Correctly predicted branches avoid stalls. The improvement is workload dependant but on average for different test cases we can observe a **\~20–40%** improvement.
+
+| Test               | Without BTB (Cycles) | With BTB (Cycles) | Improvement |
+| ------------------ | -------------------- |------------------ |------------ |
+| Forward Branch     |         45           |        33         |    26.7 %   |
+| Long Forward Branch|         133          |        77         |    42.1 %   |
+| Conditional Branch |         86           |        60         |    30.2 %   |
+| Nested Branch      |         147          |        103        |    29.9 %   |
+| Alternating Branch |         165          |        129        |    21.8 %   |
+
+See [BTB Tests](tb/README.md#test-categories) for more details
 
 ---
 
@@ -110,8 +121,8 @@ Each stage has its own folder with detailed documentation:
 
 | Resource        | Utilization |
 | --------------- | ----------- |
-| Slice LUTs      | 596         |
-| Slice Registers | 203         |
+| Slice LUTs      | 2108        |
+| Slice Registers | 780         |
 | BRAM            | 1           |
 | DSP Blocks      | 4           |
 
@@ -146,7 +157,7 @@ Each stage has its own folder with detailed documentation:
 ## 📌 Future Work
 
 * Support for CSR instructions
-* More advanced branch predictors (2-bit, gshare)
+* More advanced branch predictors (gshare)
 * Memory-mapped I/O support
 * UVM-based verification
 

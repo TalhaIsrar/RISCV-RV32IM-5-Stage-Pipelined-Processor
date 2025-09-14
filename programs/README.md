@@ -15,15 +15,10 @@ programs/
 │
 └── tests/               # Additional test programs
     │── alu_edgecases.s
-    │── btb_test.s
-    │── consecutive_m_test.s
-    │── forwarding_test.s
-    │── instructions_final.s
-    │── instructions_hazard_forwarding_without_btb.s
-    │── instructions_hazard_forwarding_with_btb.s
-    │── instructions_without forwarding.s
-    │── load_store_test.s
-    │── stress_test_errors.s
+    .
+    .
+    .
+
 
 ````
 
