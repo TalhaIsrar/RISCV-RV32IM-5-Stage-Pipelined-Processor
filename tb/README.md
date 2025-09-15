@@ -83,6 +83,15 @@ See [Results](../imgs/tests/m_unit/) for more results.
 
 ### 3. Forwarding and Hazard Tests
 
+- Forwarding Unit: Click on [Forwarding Test](../programs/basic_instructions/forwarding_test.s)
+
+![Forwarding Test](../imgs/tests/general/forwarding_test.png)
+
+- Hazard Unit: The hazard unit is used in following 3 places all of which have been tested in the respective sections for each instruction
+   - Load Stall
+   - M Unit Stall
+   - Jump/Branch Stall and Flush
+
 ### 4. General ISA & Functional Tests
 The following contrains different test cases for different functional scenarios. The exact assembly code will also be available.
 
