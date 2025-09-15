@@ -83,7 +83,7 @@ See [Results](../imgs/tests/m_unit/) for more results.
 
 ### 3. Forwarding and Hazard Tests
 
-- Forwarding Unit: Click on [Forwarding Test](../programs/basic_instructions/forwarding_test.s)
+- Forwarding Unit: Click on [Forwarding Test](../programs/basic_instructions/forwarding_test.s) to see the assembly code for the test.
 
 ![Forwarding Test](../imgs/tests/general/forwarding_test.png)
 
@@ -95,15 +95,15 @@ See [Results](../imgs/tests/m_unit/) for more results.
 ### 4. General ISA & Functional Tests
 The following contrains different test cases for different functional scenarios. The exact assembly code will also be available.
 
-- ALU Edge Cases: Click on [ALU Edge](../programs/basic_instructions/alu_edgecases.s)
+- ALU Edge Cases: Click on [ALU Edge](../programs/basic_instructions/alu_edgecases.s) to see the assembly code for the test.
 
 ![ALU Edge](../imgs/tests/general/alu_edge.png)
 
-- Load-Store Tests: Click on [Load Store](../programs/basic_instructions/load_store_test.s)
+- Load-Store Tests: Click on [Load Store](../programs/basic_instructions/load_store_test.s) to see the assembly code for the test.
 
 ![ALU Edge](../imgs/tests/general/load_store.png)
 
-- All instructions test: Click on [All Instructions](../programs/basic_instructions/all_instructions.s)
+- All instructions test: Click on [All Instructions](../programs/basic_instructions/all_instructions.s) to see the assembly code for the test.
 
 ![All Instructions](../imgs/tests/general/overall_test.png)
 ---

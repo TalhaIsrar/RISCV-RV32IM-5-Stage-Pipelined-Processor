@@ -9,6 +9,8 @@ module riscv_m_unit(
 	input logic[31:0] rs1,
 	input logic[31:0] rs2,
     input logic[4:0] rd,
+    input logic[4:0] rs1_reg,
+    input logic[4:0] rs2_reg,
 
 	output logic wr,
 	output logic[31:0] result,
@@ -52,6 +54,7 @@ logic[31:0] rs2_hold;
 // delay ready & busy by 1 cycle
 logic ready_delay;
 logic busy_delay;
+logic result_delay;
 always_ff @(posedge clk) begin
     if (resetn) begin
         ready_delay <= 1'b0;
@@ -73,9 +76,12 @@ always_ff @(posedge clk) begin
     end
 end
 
+logic[31:0] rs1_select;
+logic[31:0] rs2_select;
+
 // Select operands to pass (registered one is M followed by M otherwise normal ones)
-assign rs1_r = (valid && ready_delay) ? rs1_hold : rs1;
-assign rs2_r = (valid && ready_delay) ? rs2_hold : rs2;
+assign rs1_r = (valid && ready_delay && rs1_reg != result_dest) ? rs1_hold : rs1;
+assign rs2_r = (valid && ready_delay && rs2_reg != result_dest) ? rs2_hold : rs2;
 
 //// SUB-BLOCK INSTANTIATION
 

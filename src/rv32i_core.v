@@ -216,6 +216,8 @@ module rv32i_core(
         .rs1(m_unit_op1),
         .rs2(ex_op2_selected),
         .rd(ex_wb_rd),
+        .rs1_reg(ex_rs1),
+        .rs2_reg(ex_rs2),
         .wr(m_unit_wr),
         .result(m_unit_result),
         .busy(m_unit_busy),
