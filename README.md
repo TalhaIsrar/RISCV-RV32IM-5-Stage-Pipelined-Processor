@@ -128,7 +128,7 @@ See [BTB Tests](tb/README.md#test-categories) for more details
 
 | Resource        | Utilization |
 | --------------- | ----------- |
-| Slice LUTs      | 2108        |
+| Slice LUTs      | 2063        |
 | Slice Registers | 780         |
 | BRAM            | 1           |
 | DSP Blocks      | 4           |
@@ -139,9 +139,9 @@ See [BTB Tests](tb/README.md#test-categories) for more details
 
 ### ⚡ Power Consumption
 
-* **Dynamic Power:** 0.043 W (due to switching activity during operation)
+* **Dynamic Power:** 0.039 W (due to switching activity during operation)
 * **Static Power:** 0.091 W (leakage and idle power)
-* **Total Estimated Power:** 0.134 W
+* **Total Estimated Power:** 0.13 W
 
 💡 *These numbers come from Vivado’s post-implementation power report at 70 MHz.*
 
