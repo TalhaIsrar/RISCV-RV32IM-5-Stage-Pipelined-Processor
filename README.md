@@ -85,8 +85,8 @@ Each stage has its own folder with detailed documentation:
 
 ### M-Unit vs Shift-Add Multiply
 
-* Traditional **shift-add multiply/shift-sub divide** requires **32 iterations** for a 32-bit multiply/divide. This results in a **~20x speedup** for division and **~9x speedup** for multiplication.
-* The dedicated **M-unit** executes multiplication in **1 cycles** and for division a maximum of **27 cycle**.
+* Traditional **shift-add multiply/shift-sub divide** requires **32 iterations** for a 32-bit multiply/divide.
+* The dedicated **M-unit** executes multiplication in **1 cycles** and for division a maximum of **27 cycle**. This results in a **~20x speedup** for division and **~9x speedup** for multiplication.
 * This reduces CPI drastically for multiplication-heavy programs (e.g., matrix multiply).
 
 | Test         | SW Implementation | HW Extension | Improvement | Speedup |

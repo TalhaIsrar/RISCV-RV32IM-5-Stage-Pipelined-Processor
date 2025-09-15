@@ -84,7 +84,19 @@ See [Results](../imgs/tests/m_unit/) for more results.
 ### 3. Forwarding and Hazard Tests
 
 ### 4. General ISA & Functional Tests
+The following contrains different test cases for different functional scenarios. The exact assembly code will also be available.
 
+- ALU Edge Cases: Click on [ALU Edge](../programs/basic_instructions/alu_edgecases.s)
+
+![ALU Edge](../imgs/tests/general/alu_edge.png)
+
+- Load-Store Tests: Click on [Load Store](../programs/basic_instructions/load_store_test.s)
+
+![ALU Edge](../imgs/tests/general/load_store.png)
+
+- All instructions test: Click on [All Instructions](../programs/basic_instructions/all_instructions.s)
+
+![All Instructions](../imgs/tests/general/overall_test.png)
 ---
 
 ## Running Tests
