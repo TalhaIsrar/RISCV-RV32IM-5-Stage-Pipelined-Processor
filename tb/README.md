@@ -3,6 +3,8 @@
 This folder contains the **verification testbenches** for the RISC-V core design.  
 The goal of these tests is to validate both functionality and performance under different workloads.
 
+The processor was tested using a variety of test assembly codes. To further test the processor real life examples were used. These can be found at [Example Programs](programs/tests/examples) with their [Results](imgs/tests/programs).
+
 ---
 
 ## 📂 Test Categories

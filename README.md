@@ -18,6 +18,7 @@ The design supports the base **RV32I** instruction set along with **M-extension*
 * [FPGA Resource Utilization](#-fpga-resource-utilization)
 * [Power Consumption](#-power-consumption)
 * [How to Run](#-how-to-run)
+* [Test Example](#-test-example)
 * [Future Work](#-future-work)
 * [License](#-license)
 
@@ -160,6 +161,37 @@ See [BTB Tests](tb/README.md#test-categories) for more details
 3. Compile RISC-V test programs from `programs/` and load them into instruction memory.
 
 ---
+
+## 📊 Test Example
+- The processor was tested using a variety of test assembly codes. To further test the processor real life examples were used. These can be found at [Example Programs](programs/tests/examples) with their [Results](imgs/tests/programs). One of these examples is below
+
+### Modular Exponentiation 
+For stressing **forwarding, hazards, BTB, and the M-extension**, a **Modular Exponentiation** program is ideal. It involves:
+
+* **Multiplications** → triggers your **M-unit**
+* **Conditional branches in loops** → triggers **BTB prediction**
+* **Dependent instructions** → triggers **forwarding and hazards**
+* **Nested loops and iterative computation** → ensures pipeline stalls occur if not handled
+
+$$
+result = (a^b) \mod m
+$$
+
+The result is saved in x7 register
+
+### Example Test Numbers:
+
+* Base `a = 7`
+* Exponent `b = 13`
+* Modulus `m = 20`
+
+**Expected final result**:
+
+$$
+7^{13} \mod 20 = 7
+$$
+
+![Modular Exponentiation](imgs/tests/programs/exp_mod.png)
 
 ## 📌 Future Work
 
