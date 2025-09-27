@@ -86,8 +86,8 @@ Each stage has its own folder with detailed documentation:
 ## 📑 Supported Instructions
 The list of supported instructions by the processor is listed below. These are all the user instructions from rv32im.
 
-![Instructions RV32I](imgs/rv32i_instrictions.png)
-![Instructions RV32IM](imgs/rv32im_instrictions.png)
+![Instructions RV32I](imgs/rv32i_instructions.png)
+![Instructions RV32IM](imgs/rv32im_instructions.png)
 
 ## ⚡ Performance Improvements
 
