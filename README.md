@@ -11,6 +11,7 @@ The design supports the base **RV32I** instruction set along with **M-extension*
 * [Repository Structure](#-repository-structure)
 * [Pipeline Stages](#-pipeline-stages)
 * [Supporting Modules](#-supporting-modules)
+* [Supported Instructions](#-supported-instructions)
 * [Performance Improvements](#-performance-improvements)
   * [M-Unit vs Shift-Add Multiply](#m-unit-vs-shift-add-multiply)
   * [BTB Speedup](#btb-speedup)
@@ -81,6 +82,12 @@ Each stage has its own folder with detailed documentation:
 * [Hazard Unit](src/README.md) – detects load-use hazards, handles pipeline stalls and flushes.
 
 ---
+
+## 📑 Supported Instructions
+The list of supported instructions by the processor is listed below. These are all the user instructions from rv32im.
+
+![Instructions RV32I](imgs/rv32i_instrictions.png)
+![Instructions RV32IM](imgs/rv32im_instrictions.png)
 
 ## ⚡ Performance Improvements
 
